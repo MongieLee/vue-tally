@@ -1,16 +1,9 @@
 <template>
-    <div>
-        <Nav/>
-        this is Labels
-    </div>
+  <Layout>这是Labels</Layout>
 </template>
 
 <script lang='ts'>
-    export default {
-        name:'Label'
-    }
+export default {
+  name: "Label"
+};
 </script>
-
-<style lang="scss" scoped>
-
-</style>

@@ -1,16 +1,9 @@
 <template>
-    <div>
-        <Nav/>
-        统计
-    </div>
+  <Layout>这是Statistics</Layout>
 </template>
 
 <script lang='ts'>
-    export default {
-        name:'Statistics'
-    }
+export default {
+  name: "Statistics"
+};
 </script>
-
-<style lang="scss" scoped>
-
-</style>

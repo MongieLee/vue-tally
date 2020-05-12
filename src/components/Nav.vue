@@ -13,4 +13,11 @@
 </script>
 
 <style lang="scss" scoped>
+div{
+    border:1px red solid;
+    padding: 20px 0;
+    & a{
+        margin:10px;
+    }
+}
 </style>
