@@ -11,7 +11,6 @@ Vue.config.productionTip = false
 Vue.component('Nav',Nav)
 Vue.component('Layout',Layout)
 
-console.dir(Vue)
 new Vue({
   router,
   store,
