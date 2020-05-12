@@ -23,6 +23,11 @@ const routes: Array<RouteConfig> = [
   {
     path: '/statistics',
     component: Statistics
+  },
+  {
+    path: '*',
+    component: () => import('@/components/NotFind.vue')
+    //函数方式使用
   }
   // {
   //   path: '/',
