@@ -5,7 +5,9 @@ import router from './router'
 import store from './store'
 import Nav from '@/components/Nav.vue'
 Vue.config.productionTip = false
-// Vue.component('nav',Nav)
+
+Vue.component('Nav',Nav)
+console.dir(Vue)
 new Vue({
   router,
   store,
