@@ -17,9 +17,6 @@ body{line-height: 1.5;}
 a {
   text-decoration: none;
   color: inherit;
-  &.router-link-exact-active {
-    color: #42b983;
-  }
 }
 
 </style>
