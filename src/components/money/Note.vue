@@ -1,14 +1,20 @@
 <template>
   <div class="note-wrapper">
     <label for="note">备注：</label>
-    <input id="note" type="text" autocomplete="off" placeholder="点击填写备注..." />
+    <input id="note" type="text" autocomplete="off" v-model="value" placeholder="点击填写备注..." />
   </div>
 </template>
 
-<script>
-export default {
-  name: "Note"
-};
+<script lang='ts'>
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component
+export default class extends Vue {
+  value = "";
+}
+// export default {
+//   name: "Note"
+// };
 </script>
 
 <style lang="scss" scoped>
