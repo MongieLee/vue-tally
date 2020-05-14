@@ -10,24 +10,41 @@
   </div>
 </template>
 
-<script lang='js'>
-export default {
-  
-  name: "Types",
-  data() {
-    return {
-      selected: "pay" //pay为支出，income为收入
-    };
-  },
-  methods: {
-    selectedType(type) {
-      this.selected = type;
-    },
-    backLabels(){
-      this.$router.push({ path: "/labels" });
+<script lang='ts'>
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component
+export default class Types extends Vue {
+  selected = "pay"; //pay为支出，income为收入
+  selectedType(type: string) {
+    if (["pay", "income"].indexOf(type) === -1) {
+      throw new Error("type is unknow.");
     }
+    this.selected = type;
   }
-};
+  backLabels() {
+    this.$router.push({ path: "/labels" });
+  }
+}
+// export default {
+//   name: "Types",
+//   data() {
+//     return {
+//       selected: "pay" //pay为支出，income为收入
+//     };
+//   },
+//   methods: {
+//     selectedType(type) {
+//         if(!type in ['pay','income']){
+//             throw new Error('type is unknow.')
+//         }
+//       this.selected = type;
+//     },
+//     backLabels(){
+//       this.$router.push({ path: "/labels" });
+//     }
+//   }
+// };
 </script>
 
 <style lang="scss" scoped>
