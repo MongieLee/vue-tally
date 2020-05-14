@@ -13,7 +13,7 @@ export default {
 
 <style lang="scss" scoped>
 .note-wrapper {
-  padding: 3px 5px;
+  padding: 3px 10px 3px 15px;
   display: flex;
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);

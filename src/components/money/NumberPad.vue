@@ -39,28 +39,31 @@ export default {};
     height: 64px;
     width: 25%;
     border: none;
-    background: transparent;
-    $bgColor: #f2f2f2;
-    &:nth-child(1) {
-      background: $bgColor;
+    color: white;
+    &:not(:last-child) {
+      background: rgb(72, 72, 106);
     }
-    &:nth-child(2),&:nth-child(5) {
-      background: darken($bgColor,4%);
-    }
-    &:nth-child(3),&:nth-child(6),&:nth-child(9) {
-      background: darken($bgColor,4*2%);
-    }
-    &:nth-child(4),&:nth-child(7),&:nth-child(10),&:nth-child(13){
-        background:darken($bgColor, 4*3%)
-    }
-    &:nth-child(8),&:nth-child(11),&:nth-child(14){
-        background:darken($bgColor, 4*5%)
-    }
-    &:nth-child(12),&:nth-child(15) {
-      background: darken($bgColor,4*6%);
-    }
-    &:nth-child(16) {
-      background: darken($bgColor,4*7%);
+    // $bgColor: #f2f2f2;
+    // &:nth-child(1) {
+    //   background: $bgColor;
+    // }
+    // &:nth-child(2),&:nth-child(5) {
+    //   background: darken($bgColor,4%);
+    // }
+    // &:nth-child(3),&:nth-child(6),&:nth-child(9) {
+    //   background: darken($bgColor,4*2%);
+    // }
+    // &:nth-child(4),&:nth-child(7),&:nth-child(10),&:nth-child(13){
+    //     background:darken($bgColor, 4*3%)
+    // }
+    // &:nth-child(8),&:nth-child(11),&:nth-child(14){
+    //     background:darken($bgColor, 4*5%)
+    // }
+    // &:nth-child(12),&:nth-child(15) {
+    //   background: darken($bgColor,4*6%);
+    // }
+    &:last-child {
+      background: rgb(98,98,147);
     }
   }
 }
