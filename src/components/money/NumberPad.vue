@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="currentNumber">0</div>
+    <div class="currentNumber">{{output}}</div>
     <div class="number-wrapper">
-      <button>1</button>
-      <button>2</button>
-      <button>3</button>
-      <button>X</button>
+      <button @click="inputNumber">1</button>
+      <button @click="inputNumber">2</button>
+      <button @click="inputNumber">3</button>
+      <button @click="inputNumber('delete')">X</button>
       <button>4</button>
       <button>5</button>
       <button>6</button>
@@ -15,15 +15,34 @@
       <button>9</button>
       <button>-</button>
       <button>C</button>
-      <button>0</button>
+      <button @click="inputNumber">0</button>
       <button>.</button>
       <button>确定</button>
     </div>
   </div>
 </template>
 
-<script>
-export default {};
+<script lang='ts'>
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+@Component
+export default class NumberPad extends Vue {
+  output = "0";
+  inputNumber(event: MouseEvent) {
+    const button = event.target as HTMLButtonElement;
+    const input = button.textContent;
+    if (this.output.length === 16) {
+      return;
+    }
+    if (this.output === "0") {
+      if ("0123456789".indexOf(input) >= 0) {
+        this.output = input;
+      } else {
+        this.output += input;
+      }
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -31,6 +50,7 @@ export default {};
   text-align: right;
   padding: 10px;
   font-size: 20px;
+  min-height: 50px;
 }
 .number-wrapper {
   display: flex;
@@ -63,7 +83,7 @@ export default {};
     //   background: darken($bgColor,4*6%);
     // }
     &:last-child {
-      background: rgb(98,98,147);
+      background: rgb(98, 98, 147);
     }
   }
 }
