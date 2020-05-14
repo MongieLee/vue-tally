@@ -1,9 +1,16 @@
 <template>
-  <Layout>这是money</Layout>
+
+    <Types/>
+
 </template>
 
 <script lang='ts'>
+import Types from '@/components/money/Types.vue'
+
 export default {
-  name: "Money"
+  name: "Money",
+  components:{
+    Types
+  }
 };
 </script>

@@ -5,18 +5,15 @@
 </template>
 
 <style lang="scss">
-*{padding:0;margin:0;box-sizing: border-box;}
-body{line-height: 1.5;}
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+@import "~@/assets/styles/reset.scss";
+
+body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #333;
+  font-size:16px;
+  line-height: 1.5;
   // text-align: center;
   color: #2c3e50;
 }
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
 </style>
