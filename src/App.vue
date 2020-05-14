@@ -9,7 +9,7 @@
 @import "~@/assets/styles/helper.scss";
 
 body {
-  font-family: $font-song;;
+  font-family: $font-hei;;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #333;
