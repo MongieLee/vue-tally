@@ -10,8 +10,9 @@
   </div>
 </template>
 
-<script lang='ts'>
+<script lang='js'>
 export default {
+  
   name: "Types",
   data() {
     return {
@@ -19,10 +20,10 @@ export default {
     };
   },
   methods: {
-    selectedType(type: string) {
+    selectedType(type) {
       this.selected = type;
     },
-    backLabels() {
+    backLabels(){
       this.$router.push({ path: "/labels" });
     }
   }
