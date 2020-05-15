@@ -1,7 +1,12 @@
 <template>
   <div class="tags">
-    <ul class="current">
-      <li v-for="item in tagsList" :key="item.id" @click="item.name==='add'?addItem():selectedItem()">
+    <ul class="currentTags">
+      <li
+        v-for="item in tagsList"
+        :key="item.id"
+        @click="item.name==='add'?addItem():selectedItem(item)"
+        :class="{highlight:selectedTag.indexOf(item)>=0}"
+      >
         <Icon :name="item.iconName" />
         {{item.name}}
       </li>
@@ -9,11 +14,12 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 export default {
   name: "Tags",
   data() {
     return {
+      selectedTag: [],
       tagsList: [
         {
           id: 0,
@@ -45,17 +51,36 @@ export default {
   },
   methods: {
     addItem() {
-      console.log("111");
+      //   this.$router.push({ path: "/labels" });
+      const input = window.prompt("输入新的标签名");
+      if (input === "") {
+        alert("请输入便签名");
+      } else {
+        const length = this.tagsList.length;
+        this.tagsList[length - 1].id += 1;
+        this.tagsList.splice(length - 1, 0, {
+          id: this.tagsList.length - 1,
+          name: input,
+          iconName: "money"
+        });
+      }
     },
-    selectedItem() {
-        console.log('222')
+    selectedItem(tag) {
+      const index = this.selectedTag.indexOf(tag);
+
+      if (index >= 0) {
+        this.selectedTag.splice(index, 1);
+      } else {
+        this.selectedTag = [];
+        this.selectedTag.push(tag);
+      }
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.current {
+.currentTags {
   margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
@@ -68,6 +93,9 @@ export default {
     padding: 8px;
     .icon {
       border-radius: 50%;
+    }
+    &.highlight {
+      background: #ddd;
     }
   }
 }
