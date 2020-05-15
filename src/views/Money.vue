@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      recordList: [],
+      recordList: JSON.parse(window.localStorage.getItem("recordList")) || [],
       record: {
         amount: 0,
         note: "",
@@ -65,18 +65,28 @@ export default {
     },
     saveRecord() {
       this.record.createTime = new Date();
-      this.recordList.push(this.record);
-      this.resetRecord()
-      // this.record={}
+      this.recordList.push(JSON.parse(JSON.stringify(this.record)));
+      this.resetRecord();
     },
     resetRecord() {
       this.record = {
-        amount: 0,
+        amoun: 0,
         note: "",
         type: "pay",
         userSelectedTag: []
       };
     }
+  },
+  watch: {
+    recordList() {
+      window.localStorage.setItem(
+        "recordList",
+        JSON.stringify(this.recordList)
+      );
+    }
+  },
+  created() {
+    console.log();
   }
 };
 </script>
