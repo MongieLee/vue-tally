@@ -20,35 +20,10 @@ export default {
   data() {
     return {
       selectedTag: [],
-      tagsList: [
-        {
-          id: 0,
-          name: "衣",
-          iconName: "money"
-        },
-        {
-          id: 1,
-          name: "食物",
-          iconName: "money"
-        },
-        {
-          id: 2,
-          name: "住",
-          iconName: "money"
-        },
-        {
-          id: 3,
-          name: "行",
-          iconName: "money"
-        },
-        {
-          id: 4,
-          name: "add",
-          iconName: "money"
-        }
-      ]
+      tagsList: this.value
     };
   },
+  props: ["value"],
   methods: {
     addItem() {
       //   this.$router.push({ path: "/labels" });
@@ -67,13 +42,21 @@ export default {
     },
     selectedItem(tag) {
       const index = this.selectedTag.indexOf(tag);
-
       if (index >= 0) {
         this.selectedTag.splice(index, 1);
       } else {
         this.selectedTag = [];
         this.selectedTag.push(tag);
       }
+    }
+  },
+  created() {
+    this.selectedTag.push(this.value[0]);
+    this.$emit("update:value", this.selectedTag);
+  },
+  watch: {
+    selectedTag(newTag) {
+      this.$emit("update:value", newTag);
     }
   }
 };

@@ -1,13 +1,13 @@
 <template>
   <div class="money-warpper">
-    <Types />
-    <Tags class="money-tags" />
-    <Note />
-    <NumberPad />
+    <Types :value.sync="record.type" />
+    <Tags :value="selectedTags" class="money-tags" @update:value="getSelectedTag" />
+    <Note :value.sync="record.note" />
+    <NumberPad :value.sync="record.amount" @submit="saveRecord" />
   </div>
 </template>
 
-<script lang='ts'>
+<script>
 import Types from "@/components/money/Types.vue";
 import Tags from "@/components/money/Tags.vue";
 import Note from "@/components/money/Note.vue";
@@ -20,6 +20,63 @@ export default {
     Tags,
     Note,
     NumberPad
+  },
+  data() {
+    return {
+      recordList: [],
+      record: {
+        amount: 0,
+        note: "",
+        type: "pay",
+        userSelectedTag: []
+      },
+      selectedTags: [
+        {
+          id: 0,
+          name: "衣",
+          iconName: "money"
+        },
+        {
+          id: 1,
+          name: "食物",
+          iconName: "money"
+        },
+        {
+          id: 2,
+          name: "住",
+          iconName: "money"
+        },
+        {
+          id: 3,
+          name: "行",
+          iconName: "money"
+        },
+        {
+          id: 4,
+          name: "add",
+          iconName: "money"
+        }
+      ]
+    };
+  },
+  methods: {
+    getSelectedTag(value) {
+      this.record.userSelectedTag = value;
+    },
+    saveRecord() {
+      this.record.createTime = new Date();
+      this.recordList.push(this.record);
+      this.resetRecord()
+      // this.record={}
+    },
+    resetRecord() {
+      this.record = {
+        amount: 0,
+        note: "",
+        type: "pay",
+        userSelectedTag: []
+      };
+    }
   }
 };
 </script>

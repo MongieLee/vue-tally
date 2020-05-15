@@ -10,41 +10,28 @@
   </div>
 </template>
 
-<script lang='ts'>
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-@Component
-export default class Types extends Vue {
-  selected = "pay"; //pay为支出，income为收入
-  selectedType(type: string) {
-    if (["pay", "income"].indexOf(type) === -1) {
-      throw new Error("type is unknow.");
+<script>
+export default {
+  name: "Types",
+  data() {
+    return {
+      selected: this.value
+    };
+  },
+  props: ["value"],
+  methods: {
+    selectedType(type) {
+      if (["pay", "income"].indexOf(type) === -1) {
+        throw new Error("type is unknow.");
+      }
+      this.selected = type;
+      this.$emit("update:value",this.selected);
+    },
+    backLabels() {
+      this.$router.push({ path: "/labels" });
     }
-    this.selected = type;
   }
-  backLabels() {
-    this.$router.push({ path: "/labels" });
-  }
-}
-// export default {
-//   name: "Types",
-//   data() {
-//     return {
-//       selected: "pay" //pay为支出，income为收入
-//     };
-//   },
-//   methods: {
-//     selectedType(type) {
-//         if(!type in ['pay','income']){
-//             throw new Error('type is unknow.')
-//         }
-//       this.selected = type;
-//     },
-//     backLabels(){
-//       this.$router.push({ path: "/labels" });
-//     }
-//   }
-// };
+};
 </script>
 
 <style lang="scss" scoped>

@@ -1,20 +1,26 @@
 <template>
   <div class="note-wrapper">
     <label for="note">备注：</label>
-    <input id="note" type="text" autocomplete="off" v-model="value" placeholder="点击填写备注..." />
+    <input id="note" type="text" autocomplete="off" v-model="noteText" placeholder="点击填写备注..." />
+    {{note}}
   </div>
 </template>
 
-<script lang='ts'>
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-@Component
-export default class extends Vue {
-  value = "";
-}
-// export default {
-//   name: "Note"
-// };
+<script>
+export default {
+  name: "Note",
+  data() {
+    return {
+      noteText: this.note
+    };
+  },
+  props: ["note"],
+  watch:{
+      noteText(newText){
+          this.$emit('update:value',newText)
+      }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

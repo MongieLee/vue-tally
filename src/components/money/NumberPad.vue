@@ -22,7 +22,7 @@
       <button @click="clear">C</button>
       <button @click="inputNumber">0</button>
       <button @click="inputNumber">.</button>
-      <button v-if="['+','-'].indexOf(operator)===-1">确定</button>
+      <button v-if="['+','-'].indexOf(operator)===-1" @click="submitNumber">确定</button>
       <button v-else @click="result">=</button>
     </div>
   </div>
@@ -32,12 +32,13 @@
 export default {
   data() {
     return {
-      output: "0",
+      output: this.value.toString(),
       operator: "",
       oldNumber: "0",
       newNumber: "0"
     };
   },
+  props: ["value"],
   methods: {
     checkOutput(checkNumber) {
       if (this.output.length === 10) {
@@ -53,7 +54,6 @@ export default {
         return;
       }
       if (this.output.indexOf(".") >= 0 && checkNumber === ".") {
-        console.log("有.了不能再加了");
         return;
       }
       return true;
@@ -61,21 +61,17 @@ export default {
 
     checkOperator(checkNumber) {
       if (this.newNumber.length === 10) {
-        console.log("我不行了");
-
         return;
       }
 
       if (this.newNumber === "0") {
         if ("0123456789".indexOf(checkNumber) >= 0) {
-          console.log("1111");
           this.newNumber = checkNumber;
         } else if (
           checkNumber === "." &&
           this.newNumber.indexOf(checkNumber) === -1
         ) {
           this.newNumber += checkNumber;
-          console.log("222");
         }
 
         return;
@@ -84,8 +80,6 @@ export default {
       if (this.newNumber.indexOf(".") >= 0 && checkNumber === ".") {
         return;
       }
-      console.log("121221");
-
       return true;
     },
     inputNumber() {
@@ -159,16 +153,21 @@ export default {
     },
     result() {
       if (this.operator === "+") {
-        this.output = (
-          parseFloat(this.output) + parseFloat(this.newNumber)
-        ).toFixed(2).toString();
+        this.output = (parseFloat(this.output) + parseFloat(this.newNumber))
+          .toFixed(2)
+          .toString();
       } else if (this.operator === "-") {
-        this.output = (
-          parseFloat(this.output) - parseFloat(this.newNumber)
-        ).toFixed(2).toString();
+        this.output = (parseFloat(this.output) - parseFloat(this.newNumber))
+          .toFixed(2)
+          .toString();
       }
       this.newNumber = "0";
       this.operator = "";
+    },
+    submitNumber() {
+      this.$emit("update:value", this.output);
+      this.$emit("submit",this.output);
+      this.output = "0";
     }
   }
 };
@@ -196,7 +195,7 @@ export default {
   button {
     height: 64px;
     width: 25%;
-    border: 2px #ffd708 double ;
+    border: 2px #ffd708 double;
     color: white;
     &:not(:last-child) {
       background: rgb(72, 72, 106);
