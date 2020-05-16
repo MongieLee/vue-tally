@@ -12,6 +12,11 @@ import Types from "@/components/money/Types.vue";
 import Tags from "@/components/money/Tags.vue";
 import Note from "@/components/money/Note.vue";
 import NumberPad from "@/components/money/NumberPad.vue";
+import rocordModel from "@/models/recordModel";
+import tagsModel from "@/models/tagsModels";
+const recordList = rocordModel.fetch() || [];
+tagsModel.init();
+const selectedTags = tagsModel.fetch();
 
 export default {
   name: "Money",
@@ -23,40 +28,14 @@ export default {
   },
   data() {
     return {
-      recordList: JSON.parse(window.localStorage.getItem("recordList")) || [],
+      recordList,
       record: {
         amount: 0,
         note: "",
         type: "pay",
         userSelectedTag: []
       },
-      selectedTags: [
-        {
-          id: 0,
-          name: "衣",
-          iconName: "money"
-        },
-        {
-          id: 1,
-          name: "食物",
-          iconName: "money"
-        },
-        {
-          id: 2,
-          name: "住",
-          iconName: "money"
-        },
-        {
-          id: 3,
-          name: "行",
-          iconName: "money"
-        },
-        {
-          id: 4,
-          name: "add",
-          iconName: "money"
-        }
-      ]
+      selectedTags
     };
   },
   methods: {
@@ -79,14 +58,11 @@ export default {
   },
   watch: {
     recordList() {
-      window.localStorage.setItem(
-        "recordList",
-        JSON.stringify(this.recordList)
-      );
+      rocordModel.save(this.recordList);
     }
   },
   created() {
-    console.log();
+    // if(localStorage.getItem(''))
   }
 };
 </script>
