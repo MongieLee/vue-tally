@@ -107,7 +107,7 @@ export default {
     }
   },
   created() {
-    for (let value in this.allTagsList) {
+    for (const value in this.allTagsList) {
       this.allTagsList[value].map(item => {
         if (item.name === this.selectedTag.name) {
           this.selectedTag = item;

@@ -3,31 +3,31 @@ const tagsList = [
     {
         id: 0,
         name: "餐饮",
-        iconName: "money",
+        iconName: "food",
         tagType: "食物"
     },
     {
         id: 1,
         name: "外卖",
-        iconName: "money",
+        iconName: "takeOutFood",
         tagType: "食物"
     },
     {
         id: 2,
         name: "医疗",
-        iconName: "money",
+        iconName: "medicalCare",
         tagType: "日常"
     },
     {
         id: 3,
-        name: "行",
-        iconName: "money",
-        tagType: "食物"
+        name: "交通",
+        iconName: "traffic",
+        tagType: "日常"
     },
     {
         id: 4,
         name: "add",
-        iconName: "money",
+        iconName: "add",
         tagType: "食物"
     }
 ]

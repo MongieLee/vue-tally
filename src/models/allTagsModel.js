@@ -1,59 +1,57 @@
 import userTagsModels from '@/models/userTagsModel.js'
+function getDefaultTag() {
+    for (const i in userTagsModels.fetch()) {
+        return userTagsModels.fetch()[i]
+    }
+}
 const localStorageKeyName = 'allTagsList'
 const allTagsList = {
     foods: [
         {
             id: 0,
             name: "餐饮",
-            iconName: "money",
+            iconName: "food",
             tagType: "食物"
         },
         {
             id: 1,
             name: "水果",
-            iconName: "money",
+            iconName: "fruits",
             tagType: "食物"
 
         },
         {
             id: 2,
             name: "酒水",
-            iconName: "money",
+            iconName: "drinks",
             tagType: "食物"
 
         },
         {
             id: 3,
             name: "零食",
-            iconName: "money",
+            iconName: "snacks",
             tagType: "食物"
 
         },
         {
             id: 4,
             name: "买菜",
-            iconName: "money",
+            iconName: "buyVegetables",
             tagType: "食物"
 
         },
         {
             id: 5,
             name: "外卖",
-            iconName: "money",
+            iconName: "takeOutFood",
             tagType: "食物"
 
         },
         {
             id: 6,
             name: "奶茶",
-            iconName: "money",
-            tagType: "食物"
-
-        },
-        {
-            id: 8,
-            name: "医疗",
-            iconName: "money",
+            iconName: "teaWithMilk",
             tagType: "食物"
 
         }
@@ -62,34 +60,40 @@ const allTagsList = {
         {
             id: 0,
             name: "房租",
-            iconName: "money",
+            iconName: "rent",
             tagType: "日常"
         },
         {
             id: 1,
             name: "水电",
-            iconName: "money",
+            iconName: "hydropower",
             tagType: "日常"
 
         },
         {
             id: 2,
             name: "话费",
-            iconName: "money",
+            iconName: "telephoneBill",
             tagType: "日常"
 
         },
         {
             id: 3,
             name: "维护",
-            iconName: "money",
+            iconName: "lottery",
             tagType: "日常"
 
         },
         {
             id: 4,
             name: "医疗",
-            iconName: "money",
+            iconName: "medicalCare",
+            tagType: "日常"
+        },
+        {
+            id: 5,
+            name: "交通",
+            iconName: "traffic",
             tagType: "日常"
         }
     ],
@@ -97,42 +101,34 @@ const allTagsList = {
         {
             id: 0,
             name: "电商",
-            iconName: "money",
+            iconName: "onlineShopping",
             tagType: "娱乐"
         },
         {
             id: 1,
             name: "游戏",
-            iconName: "money",
+            iconName: "game",
             tagType: "娱乐"
 
         },
         {
             id: 2,
             name: "宠物",
-            iconName: "money",
+            iconName: "pets",
             tagType: "娱乐"
 
         },
         {
             id: 3,
             name: "彩票",
-            iconName: "money",
+            iconName: "lottery",
             tagType: "娱乐"
         }
     ]
 
 
 }
-const defalutTag = xx()
-function xx() {
-    for (let i in userTagsModels.fetch()) {
-        return userTagsModels.fetch()[i]
-    }
-}
-
-console.log(defalutTag)
-
+const defalutTag = getDefaultTag()
 
 const model = {
     defalutTag,
