@@ -2,28 +2,33 @@ const localStorageKeyName = 'tagsList'
 const tagsList = [
     {
         id: 0,
-        name: "衣",
-        iconName: "money"
+        name: "餐饮",
+        iconName: "money",
+        tagType: "食物"
     },
     {
         id: 1,
-        name: "食物",
-        iconName: "money"
+        name: "外卖",
+        iconName: "money",
+        tagType: "食物"
     },
     {
         id: 2,
-        name: "住",
-        iconName: "money"
+        name: "医疗",
+        iconName: "money",
+        tagType: "日常"
     },
     {
         id: 3,
         name: "行",
-        iconName: "money"
+        iconName: "money",
+        tagType: "食物"
     },
     {
         id: 4,
         name: "add",
-        iconName: "money"
+        iconName: "money",
+        tagType: "食物"
     }
 ]
 const model = {

@@ -13,10 +13,10 @@ import Tags from "@/components/money/Tags.vue";
 import Note from "@/components/money/Note.vue";
 import NumberPad from "@/components/money/NumberPad.vue";
 import rocordModel from "@/models/recordModel.js";
-import tagsModel from "@/models/userTagsModels.js";
+import tagsModel from "@/models/userTagsModel.js";
 const recordList = rocordModel.fetch() || [];
 tagsModel.init();
-const selectedTags = tagsModel.fetch();
+// let selectedTags = tagsModel.fetch();
 
 export default {
   name: "Money",
@@ -35,7 +35,7 @@ export default {
         type: "pay",
         userSelectedTag: []
       },
-      selectedTags
+      selectedTags:[]
     };
   },
   methods: {
@@ -61,8 +61,8 @@ export default {
       rocordModel.save(this.recordList);
     }
   },
-  created() {
-    // if(localStorage.getItem(''))
+  created(){
+    this.selectedTags = tagsModel.fetch();
   }
 };
 </script>

@@ -2,8 +2,8 @@
   <div class="tags">
     <ul class="currentTags">
       <li
-        v-for="item in tagsList"
-        :key="item.id"
+        v-for="(item,index) in tagsList"
+        :key="index"
         @click="item.name==='add'?addItem():selectedItem(item)"
         :class="{highlight:selectedTag.indexOf(item)>=0}"
       >
