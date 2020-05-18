@@ -4,8 +4,8 @@
   </svg>
 </template>
 
-<script lang="ts">
-const importAll = (requireContent: __WebpackModuleApi.RequireContext) =>
+<script>
+const importAll = (requireContent) =>
   requireContent.keys().forEach(requireContent);
 try {
   importAll(require.context("../assets/icons", true, /\.svg$/));
