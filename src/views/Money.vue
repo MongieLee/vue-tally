@@ -1,7 +1,7 @@
 <template>
   <div class="money-warpper">
     <Types :value.sync="record.type" />
-    <Tags :value="selectedTags" class="money-tags" @update:value="getSelectedTag" />
+    <Tags class="money-tags" />
     <Note :value.sync="record.note" />
     <NumberPad :value.sync="record.amount" @submit="saveRecord" />
   </div>
@@ -12,11 +12,6 @@ import Types from "@/components/money/Types.vue";
 import Tags from "@/components/money/Tags.vue";
 import Note from "@/components/money/Note.vue";
 import NumberPad from "@/components/money/NumberPad.vue";
-import rocordModel from "@/models/recordModel.js";
-import tagsModel from "@/models/userTagsModel.js";
-const recordList = rocordModel.fetch() || [];
-tagsModel.init();
-// let selectedTags = tagsModel.fetch();
 
 export default {
   name: "Money",
@@ -28,41 +23,37 @@ export default {
   },
   data() {
     return {
-      recordList,
+      recordList: [],
       record: {
         amount: 0,
         note: "",
         type: "pay",
-        userSelectedTag: []
-      },
-      selectedTags:[]
+        selectedTag: null
+      }
     };
   },
+  computed: {
+    userSelectedTag() {
+      return this.$store.state.defaultSelectedTag[0];
+    }
+  },
   methods: {
-    getSelectedTag(value) {
-      this.record.userSelectedTag = value;
-    },
     saveRecord() {
+      this.record.selectedTag = this.userSelectedTag;
       this.record.createTime = new Date();
-      this.recordList.push(JSON.parse(JSON.stringify(this.record)));
+      this.recordList.push(JSON.parse(JSON.stringify(this.record))); //深拷贝
+      this.$store.commit('saveRecordList',this.recordList)
       this.resetRecord();
+      this.$router.push('/statistics')
     },
     resetRecord() {
       this.record = {
-        amoun: 0,
+        amount: 0,
         note: "",
         type: "pay",
-        userSelectedTag: []
+        selectedTag: null
       };
     }
-  },
-  watch: {
-    recordList() {
-      rocordModel.save(this.recordList);
-    }
-  },
-  created(){
-    this.selectedTags = tagsModel.fetch();
   }
 };
 </script>

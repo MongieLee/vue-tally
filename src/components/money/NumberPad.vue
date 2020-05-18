@@ -166,7 +166,7 @@ export default {
     },
     submitNumber() {
       this.$emit("update:value", this.output);
-      this.$emit("submit",this.output);
+      this.$emit("submit", this.output);
       this.output = "0";
     }
   }
@@ -175,10 +175,14 @@ export default {
 
 <style lang="scss" scoped>
 .output-wrapper {
+  border-top: 1px #ddd solid;
+
   text-align: right;
   padding: 5px 20px;
   font-size: 50px;
   line-height: 1;
+  background: rgb(242, 243, 245);
+
   .operatoring {
     font-size: 35px;
     display: flex;
@@ -195,32 +199,12 @@ export default {
   button {
     height: 64px;
     width: 25%;
-    border: 2px #ffd708 double;
-    color: white;
+    border: 1px #ddd solid;
     &:not(:last-child) {
-      background: rgb(72, 72, 106);
+      background: rgb(242, 243, 245);
     }
-    // $bgColor: #f2f2f2;
-    // &:nth-child(1) {
-    //   background: $bgColor;
-    // }
-    // &:nth-child(2),&:nth-child(5) {
-    //   background: darken($bgColor,4%);
-    // }
-    // &:nth-child(3),&:nth-child(6),&:nth-child(9) {
-    //   background: darken($bgColor,4*2%);
-    // }
-    // &:nth-child(4),&:nth-child(7),&:nth-child(10),&:nth-child(13){
-    //     background:darken($bgColor, 4*3%)
-    // }
-    // &:nth-child(8),&:nth-child(11),&:nth-child(14){
-    //     background:darken($bgColor, 4*5%)
-    // }
-    // &:nth-child(12),&:nth-child(15) {
-    //   background: darken($bgColor,4*6%);
-    // }
     &:last-child {
-      background: rgb(98, 98, 147);
+      background: rgb(255, 218, 71); //darken($bgColor,4*6%)可使用函数;
     }
   }
 }

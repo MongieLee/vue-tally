@@ -4,7 +4,7 @@
       <li @click="selectedType('pay')" :class="selected==='pay' && 'selected'">支出</li>
       <li @click="selectedType('income')" :class="selected==='income' && 'selected'">收入</li>
     </ul>
-    <span @click="backLabels">
+    <span @click="backStatistics">
       <Icon name="close" />
     </span>
   </div>
@@ -27,8 +27,8 @@ export default {
       this.selected = type;
       this.$emit("update:value",this.selected);
     },
-    backLabels() {
-      this.$router.push({ path: "/labels" });
+    backStatistics() {
+      this.$router.push({ path: "/statistics" });
     }
   }
 };
@@ -37,6 +37,7 @@ export default {
 <style lang="scss" scoped>
 .typeList-wrapper {
   position: relative;
+  background-color: rgb(255, 218, 71);
   .type-list {
     display: flex;
     justify-content: center;
@@ -44,13 +45,13 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 5px 10px;
+      padding: 20px 10px 10px;
       position: relative;
       &.selected::after {
         content: "";
         display: block;
         width: 100%;
-        border: 2px rgb(255, 215, 8) solid;
+        border: 2px black solid;
         border-radius: 5px;
         position: absolute;
         bottom: 0;

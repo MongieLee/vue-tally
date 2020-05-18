@@ -20,8 +20,8 @@
         <li
           class="tagItem"
           v-for="value in allTagsList.foods"
-          :class="{highLight:selectedTag.name===value.name&&selectedTag.tagType===value.tagType}"
           :key="value.id"
+          :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
           @click="changeSelected(value)"
         >
           <span>{{value.name}}</span>
@@ -35,7 +35,7 @@
           class="tagItem"
           v-for="value in allTagsList.life"
           :key="value.id"
-          :class="{highLight:selectedTag.name===value.name&&selectedTag.tagType===value.tagType}"
+          :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
           @click="changeSelected(value)"
         >
           <span>{{value.name}}</span>
@@ -48,8 +48,8 @@
         <li
           class="tagItem"
           v-for="value in allTagsList.play"
+          :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
           :key="value.id"
-          :class="{highLight:selectedTag.name===value.name&&selectedTag.tagType===value.tagType}"
           @click="changeSelected(value)"
         >
           <span>{{value.name}}</span>
@@ -57,23 +57,26 @@
         </li>
       </ul>
     </div>
-    {{selectedTag}}
   </div>
 </template>
 
 <script>
-import userTagsModel from "@/models/userTagsModel.js";
-import allTagsModel from "@/models/allTagsModel.js";
-allTagsModel.init();
-const allTagsList = allTagsModel.fetch();
-
 export default {
   name: "Label",
   data() {
     return {
-      allTagsList,
-      selectedTag: allTagsModel.defalutTag
+      selectedTag: {
+        id: 0,
+        name: "餐饮",
+        iconName: "food",
+        tagType: "食物"
+      }
     };
+  },
+  computed: {
+    allTagsList() {
+      return this.$store.state.allTagsList;
+    }
   },
   methods: {
     back() {
@@ -83,36 +86,19 @@ export default {
       this.selectedTag = value;
     },
     submitTag() {
-      const currentTagsList = userTagsModel.fetch();
-      let q = true;
-      currentTagsList.map(m => {
-        console.log(m);
-        if (
-          m.name === this.selectedTag.name &&
-          m.tagType === this.selectedTag.tagType
-        ) {
-          alert("不能重复添加标签");
-          q = false;
+      const currentTag = this.selectedTag;
+      let tempB = true
+      this.$store.state.userSelectedTag.map(v => {
+        if (v.name === currentTag.name && v.tagType === currentTag.tagType) {
+          alert("不能添加重复的标签！");
+          tempB = false
         }
       });
-      console.log(q);
-      if (!q) {
-        return;
+      console.log(tempB)
+      if (tempB) {
+        this.$store.commit("saveUserSelectedTag", currentTag);
+        this.$router.go(-1);
       }
-      currentTagsList[currentTagsList.length - 1].id += 1;
-      this.selectedTag.id = currentTagsList.length - 2;
-      currentTagsList.splice(currentTagsList.length - 1, 0, this.selectedTag);
-      userTagsModel.save(JSON.stringify(currentTagsList));
-      this.$router.push("/money");
-    }
-  },
-  created() {
-    for (const value in this.allTagsList) {
-      this.allTagsList[value].map(item => {
-        if (item.name === this.selectedTag.name) {
-          this.selectedTag = item;
-        }
-      });
     }
   }
 };
@@ -124,7 +110,7 @@ export default {
   display: flex;
   flex-direction: column;
   .action-bar {
-    background-color: #f88;
+    background-color: rgb(255, 218, 71);
     font-size: 20px;
     display: flex;
     padding: 10px;
@@ -141,7 +127,7 @@ export default {
     p {
       color: #6d6a6a;
       font-size: 14px;
-      padding: 10px 0 20px;
+      padding: 10px 0 15px;
       text-align: center;
     }
     flex-grow: 1;
@@ -155,10 +141,23 @@ export default {
         flex-direction: column-reverse;
         justify-content: center;
         align-items: center;
-        padding: 20px;
+        padding: 10px;
+        span {
+          margin-top: 5px;
+          font-size: 12px;
+        }
       }
       .highLight {
-        color: blue;
+        .icon {
+          background: rgb(255, 218, 71);
+        }
+      }
+      .icon {
+        background: #f5f5f5;
+        height: 40px;
+        width: 40px;
+        padding: 10px;
+        border-radius: 50%;
       }
     }
   }

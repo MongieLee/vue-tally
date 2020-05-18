@@ -4,60 +4,43 @@
       <li
         v-for="(item,index) in tagsList"
         :key="index"
-        @click="item.name==='add'?addItem():selectedItem(item)"
-        :class="{highlight:selectedTag.indexOf(item)>=0}"
+        @click="item.name==='添加'?addItem():selectedItem(item)"
+        :class="{highlight:selectedTag[0].name===item.name}"
       >
         <Icon :name="item.iconName" />
-        {{item.name}}
+        <span>{{item.name}}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import store from "@/store";
 export default {
   name: "Tags",
   data() {
-    return {
-      selectedTag: [],
-      tagsList: this.value
-    };
+    return {};
   },
-  props: ["value"],
   methods: {
     addItem() {
-      //   this.$router.push({ path: "/labels" });
-      const input = window.prompt("输入新的标签名");
-      if (input === "") {
-        alert("请输入便签名");
-      } else {
-        const length = this.tagsList.length;
-        this.tagsList[length - 1].id += 1;
-        this.tagsList.splice(length - 1, 0, {
-          id: this.tagsList.length - 1,
-          name: input,
-          iconName: "money"
-        });
-      }
+      this.$router.push({ path: "/labels" });
     },
     selectedItem(tag) {
-      const index = this.selectedTag.indexOf(tag);
-      if (index >= 0) {
-        this.selectedTag.splice(index, 1);
-      } else {
-        this.selectedTag = [];
-        this.selectedTag.push(tag);
+      if (this.selectedTag[0].name !== tag.name) {
+        this.$store.commit("saveSelectedTag", tag);
       }
     }
   },
-  created() {
-    this.selectedTag.push(this.value[0]);
-    this.$emit("update:value", this.selectedTag);
-  },
-  watch: {
-    selectedTag(newTag) {
-      this.$emit("update:value", newTag);
+  computed: {
+    tagsList() {
+      return store.state.userSelectedTag;
+    },
+    selectedTag() {
+      return store.state.defaultSelectedTag;
     }
+  },
+  mounted(){
+    this.$store.commit('initUserTagList')
   }
 };
 </script>
@@ -74,11 +57,20 @@ export default {
     align-items: center;
     width: 25%;
     padding: 8px;
+    span {
+      font-size: 12px;
+      margin-top: 5px;
+    }
     .icon {
       border-radius: 50%;
+      height: 40px;
+      width: 40px;
+      padding: 10px;
     }
     &.highlight {
-      background: #ddd;
+      .icon {
+        background: rgb(255, 218, 71);
+      }
     }
   }
 }

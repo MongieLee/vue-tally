@@ -3,9 +3,6 @@
     <router-link to="/money" class="item" active-class="selected">
       <Icon name="money" />记账
     </router-link>
-    <router-link to="/labels" class="item" active-class="selected">
-      <Icon name="label" />标签
-    </router-link>
     <router-link to="/statistics" class="item" active-class="selected">
       <Icon name="statistics" />统计
     </router-link>
@@ -24,7 +21,7 @@ nav {
   // border: 1px red solid;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
   > .item {
-    width: 33.33333%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;

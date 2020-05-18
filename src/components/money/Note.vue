@@ -29,7 +29,6 @@ export default {
   display: flex;
   align-items: center;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-  background: #f5f5f5;
   input {
     margin-left: 10px;
     flex-grow: 1;
