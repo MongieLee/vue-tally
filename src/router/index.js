@@ -4,10 +4,11 @@ import Money from '@/views/Money.vue'
 import Labels from '@/views/Labels.vue'
 import Statistics from '@/views/Statistics.vue'
 import ReportForm from '@/views/ReportForm.vue'
+import RecordDetails from '@/components/RecordDetails.vue'
 
 Vue.use(VueRouter)
 
-const routes= [
+const routes = [
   {
     path: '/',
     redirect: '/statistics',
@@ -23,11 +24,22 @@ const routes= [
   },
   {
     path: '/statistics',
-    component: Statistics
+    component: Statistics,
+    childern:[
+      
+    ]
   },
   {
     path: '/reportForm',
     component: ReportForm
+  },
+  {
+    path: '/statistics/details/:day/:id',
+    component: RecordDetails
+  },
+  {
+    path: '/money/details/:day/:id',
+    component: RecordDetails
   },
   {
     path: '*',

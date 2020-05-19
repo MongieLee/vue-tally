@@ -40,7 +40,7 @@ nav {
     }
   }
   > .item.selected .icon {
-    color: orange;
+    color: rgb(255, 218, 71);
   }
 }
 </style>

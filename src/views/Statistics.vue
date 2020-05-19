@@ -7,38 +7,48 @@
       <div class="time-and-count">
         <el-date-picker class="xxx" v-model="currentM" type="month" placeholder="选择月"></el-date-picker>
         <div>
-          <span>收入:{{currentIncome}}</span>
-          <span>支出:{{currentPay}}</span>
+          <span>收入：{{currentIncome}}</span>
+          <span>支出：{{currentPay}}</span>
         </div>
       </div>
 
-      <div class="data-container">
+      <div class="data-wrapper">
         <div class="null-content" v-if="groupedList.length===0">
           <Icon name="no-data" />
           <span name="traffic">暂无数据,快去记一笔吧~</span>
         </div>
-        <div v-else>
+        <div class="jjj" v-else>
           <div v-for="(value,index) in paixuhoude" :key="index">
-            <span>{{getDate(index)}}</span>
-            <span>{{getDayPay(value)?`支出：${getDayPay(value)}`:null}}</span>
-            <span>{{getDayIncome(value)?`收入：${getDayIncome(value)}`:null}}</span>
-            <ul>
-              <li class="list-item" v-for="(item,index) in value" :key="index">
+            <div v-if="value!==undefined" class="day-info">
+              <span>{{getDate(index)}}</span>
+              <span>
+                <span>{{getDayPay(value)?`支出：${getDayPay(value)} `:null}}</span>
+                <span>{{getDayIncome(value)?`收入：${getDayIncome(value)}`:null}}</span>
+              </span>
+            </div>
+            <div v-if="value!==undefined">
+              <router-link
+                :to="`/statistics/details/${index}/${index2}`"
+                class="list-item"
+                v-for="(item,index2) in value"
+                :key="index2"
+              >
                 <Icon :name="item.selectedTag.iconName" />
                 <span class="tag-type">{{item.selectedTag.tagType}}</span>
-                <span class="amount">{{item.type==='pay'?'-'+item.amount:item.amount}}</span>
-              </li>
-            </ul>
+                <span class="amount">{{item.type==='pay'?'- '+item.amount:item.amount}}</span>
+              </router-link>
+            </div>
           </div>
         </div>
       </div>
+      <router-view />
     </div>
   </Layout>
 </template>
 
 <script>
 import dayJs from "dayjs";
-import "element-ui/lib/theme-chalk/index.css";
+// import "element-ui/lib/theme-chalk/index.css";
 
 export default {
   name: "Statistics",
@@ -87,11 +97,9 @@ export default {
           }
         }
       );
-      console.log(currentMonthList);
       let xxx = [];
       currentMonthList.map(v => {
         let day = dayJs(v.createTime).get("date");
-        console.log(day);
         if (!xxx[day]) {
           xxx[day] = [];
           xxx[day].push(v);
@@ -103,21 +111,23 @@ export default {
         w.sort(
           (a, b) =>
             dayJs(b.createTime).valueOf() - dayJs(a.createTime).valueOf()
+          //  dayJs(a.createTime).valueOf() - dayJs(b.createTime).valueOf()
         );
         w.map(k => {
           if (k.type === "pay") {
-            this.currentPay += parseInt(k.amount);
+            this.currentPay += parseFloat(k.amount);
           } else if (k.type === "income") {
-            this.currentIncome += parseInt(k.amount);
+            this.currentIncome += parseFloat(k.amount);
           }
         });
       });
+      localStorage.setItem("paihaoxude", JSON.stringify(xxx));
       this.paixuhoude = xxx;
       return this.paixuhoude;
     }
   },
   methods: {
-    getDate(index){
+    getDate(index) {
       let objMap = {
         "1": "一",
         "2": "二",
@@ -127,11 +137,17 @@ export default {
         "6": "六",
         "7": "七"
       };
-      if(!this.paixuhoude[index]){
-        return
-      }else{
-        console.log('星期几',dayJs(this.paixuhoude[index][0].createTime).get("day"))
-        return `${this.getMonth+1}月${index}号 星期${objMap[dayJs(this.paixuhoude[index][0].createTime).get("day")]}`
+      if (!this.paixuhoude[index]) {
+        return;
+      } else {
+        console.log(this.paixuhoude[index][0].createTime, "---");
+        console.log(
+          "星期几",
+          dayJs(this.paixuhoude[index][0].createTime).get("day")
+        );
+        return `${this.getMonth + 1}月${index}号 星期${
+          objMap[dayJs(this.paixuhoude[index][0].createTime).get("day")]
+        }`;
       }
     },
     getDayPay(arr) {
@@ -160,6 +176,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-month-table td.current:not(.disabled) .cell {
+  color: red;
+}
 .data-container {
   display: flex;
   flex-direction: column;
@@ -187,26 +206,40 @@ export default {
   align-items: center;
   background-color: rgb(255, 218, 71);
   span {
-    margin-right: 20px;
+    margin-right: 13px;
   }
 }
 
-.data-container {
+.data-wrapper {
   flex-grow: 1;
-}
-.null-content {
-  display: flex;
-  flex-direction: column;
-  color: #999;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  .icon {
-    width: 80px;
-    height: 80px;
+  .jjj {
+    display: flex;
+    flex-direction: column-reverse;
+    > div {
+      > .day-info {
+        padding: 3px 15px 3px 10px;
+        border-bottom: 1px #f5f5f5 solid;
+        font-size: 14px;
+        color: #999;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
-  span {
-    font-size: 14px;
+  .null-content {
+    display: flex;
+    flex-direction: column;
+    color: #999;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .icon {
+      width: 80px;
+      height: 80px;
+    }
+    span {
+      font-size: 14px;
+    }
   }
 }
 

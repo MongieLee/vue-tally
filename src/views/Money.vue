@@ -40,6 +40,7 @@ export default {
   methods: {
     saveRecord() {
       this.record.selectedTag = this.userSelectedTag;
+      this.record.amount = Math.abs(this.record.amount)
       this.record.createTime = new Date();
       this.recordList.push(JSON.parse(JSON.stringify(this.record))); //深拷贝
       this.$store.commit('saveRecordList',this.recordList)
