@@ -183,7 +183,7 @@ export default new Vuex.Store({
         window.localStorage.setItem('userSelectedTag', JSON.stringify(userSelectedTag))
     },
     saveRecordList(state,data){
-        state.recordList.push(data)
+        state.recordList.push(data[0])
         window.localStorage.setItem('recordList', JSON.stringify(state.recordList))
     }
     // save
