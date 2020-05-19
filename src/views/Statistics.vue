@@ -12,19 +12,24 @@
         </div>
       </div>
 
-      <div>
+      <div class="data-container">
         <div class="null-content" v-if="groupedList.length===0">
-          <Icon name="add" />
-          <span name="traffic">暂无数据</span>
+          <Icon name="no-data" />
+          <span name="traffic">暂无数据,快去记一笔吧~</span>
         </div>
         <div v-else>
-          <ul>
-            <li class="list-item" v-for="(item,index) in groupedList" :key="index">
-              <Icon :name="item.selectedTag.iconName" />
-              <span class="tag-type">{{item.selectedTag.tagType}}</span>
-              <span class="amount">{{item.type==='pay'?'-'+item.amount:item.amount}}</span>
-            </li>
-          </ul>
+          <div v-for="(value,index) in paixuhoude" :key="index">
+            <span>{{getDate(index)}}</span>
+            <span>{{getDayPay(value)?`支出：${getDayPay(value)}`:null}}</span>
+            <span>{{getDayIncome(value)?`收入：${getDayIncome(value)}`:null}}</span>
+            <ul>
+              <li class="list-item" v-for="(item,index) in value" :key="index">
+                <Icon :name="item.selectedTag.iconName" />
+                <span class="tag-type">{{item.selectedTag.tagType}}</span>
+                <span class="amount">{{item.type==='pay'?'-'+item.amount:item.amount}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -41,37 +46,111 @@ export default {
     return {
       currentM: new Date(),
       currentIncome: 0,
-      currentPay: 0
+      currentPay: 0,
+      paixuhoude: null
     };
   },
   computed: {
+    getMonth() {
+      return dayJs(this.currentM).get("month");
+    },
+    getDay() {
+      let objMap = {
+        "1": "一",
+        "2": "二",
+        "3": "三",
+        "4": "四",
+        "5": "五",
+        "6": "六",
+        "7": "七"
+      };
+      return objMap[dayJs(this.currentM).get("day")];
+    },
+
     recordList() {
       return this.$store.state.recordList;
     },
     groupedList() {
       const { recordList } = this;
+      if (recordList.length === 0) {
+        return recordList;
+      }
       this.currentPay = 0;
       this.currentIncome = 0;
-      let currentList = JSON.parse(JSON.stringify(recordList)).filter(item => {
-        if (
-          dayJs(item.createTime).get("month") ===
-          dayJs(this.currentM).get("month")
-        ) {
-          return item;
+      let currentMonthList = JSON.parse(JSON.stringify(recordList)).filter(
+        item => {
+          if (
+            dayJs(item.createTime).get("month") ===
+            dayJs(this.currentM).get("month")
+          ) {
+            return item;
+          }
+        }
+      );
+      console.log(currentMonthList);
+      let xxx = [];
+      currentMonthList.map(v => {
+        let day = dayJs(v.createTime).get("date");
+        console.log(day);
+        if (!xxx[day]) {
+          xxx[day] = [];
+          xxx[day].push(v);
+        } else {
+          xxx[day].push(v);
         }
       });
-
-      if (currentList.length !== 0) {
-        currentList.map(v => {
-          if (v.type === "pay") {
-            this.currentPay += parseInt(v.amount);
-          } else if (v.type === "income") {
-            this.currentIncome += parseInt(v.amount);
+      xxx.map(w => {
+        w.sort(
+          (a, b) =>
+            dayJs(b.createTime).valueOf() - dayJs(a.createTime).valueOf()
+        );
+        w.map(k => {
+          if (k.type === "pay") {
+            this.currentPay += parseInt(k.amount);
+          } else if (k.type === "income") {
+            this.currentIncome += parseInt(k.amount);
           }
         });
+      });
+      this.paixuhoude = xxx;
+      return this.paixuhoude;
+    }
+  },
+  methods: {
+    getDate(index){
+      let objMap = {
+        "1": "一",
+        "2": "二",
+        "3": "三",
+        "4": "四",
+        "5": "五",
+        "6": "六",
+        "7": "七"
+      };
+      if(!this.paixuhoude[index]){
+        return
+      }else{
+        console.log('星期几',dayJs(this.paixuhoude[index][0].createTime).get("day"))
+        return `${this.getMonth+1}月${index}号 星期${objMap[dayJs(this.paixuhoude[index][0].createTime).get("day")]}`
       }
+    },
+    getDayPay(arr) {
+      if (!arr) return;
+      console.log(arr);
+      let pay = 0;
+      arr.map(v => {
+        if (v.type === "pay") pay += parseInt(v.amount);
+      });
+      return pay;
+    },
+    getDayIncome(arr) {
+      if (!arr) return;
 
-      return currentList;
+      let inCome = 0;
+      arr.map(v => {
+        if (v.type === "income") inCome += parseInt(v.amount);
+      });
+      return inCome;
     }
   },
   created() {
@@ -107,11 +186,14 @@ export default {
   justify-content: space-between;
   align-items: center;
   background-color: rgb(255, 218, 71);
-  span{
+  span {
     margin-right: 20px;
   }
 }
 
+.data-container {
+  flex-grow: 1;
+}
 .null-content {
   display: flex;
   flex-direction: column;
@@ -122,6 +204,9 @@ export default {
   .icon {
     width: 80px;
     height: 80px;
+  }
+  span {
+    font-size: 14px;
   }
 }
 
