@@ -3,7 +3,7 @@
     <div class="action-bar">
       <span @click="back">
         <Icon name="back" />
-        <span>请选择标签</span>
+        <span class="backFont">请选择标签</span>
       </span>
       <span @click="submitTag">完成</span>
     </div>
@@ -111,13 +111,17 @@ export default {
   flex-direction: column;
   .action-bar {
     background-color: rgb(255, 218, 71);
-    font-size: 20px;
+    font-size: 16px;
     display: flex;
-    padding: 10px;
+    padding: 15px 10px;
     justify-content: space-between;
+    .backFont{
+      margin-left:15px;
+    }
   }
   .selectedTag {
     padding: 10px;
+    font-size: 14px;
     display: flex;
     justify-content: space-between;
     border-bottom: 1px #ddd solid;
