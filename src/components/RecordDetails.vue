@@ -66,7 +66,7 @@ export default {
       this.$router.go(-1);
     },
     deleteItem() {
-      this.$confirm("此操作将永久删除该文件, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该账单记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -93,7 +93,15 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+.el-message-box {
+  width: 300px;
+}
+.el-button--primary {
+  background-color: red;
+  border:none;
+}
+</style>
 <style lang="scss" scoped>
 ::v-deep .el-message-box {
   width: 200px;

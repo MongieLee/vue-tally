@@ -19,8 +19,8 @@
       <ul class="item-container">
         <li
           class="tagItem"
-          v-for="value in allTagsList.foods"
-          :key="value.id"
+          v-for="(value,index) in allTagsList.foods"
+          :key="index"
           :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
           @click="changeSelected(value)"
         >
@@ -33,8 +33,8 @@
       <ul class="item-container">
         <li
           class="tagItem"
-          v-for="value in allTagsList.life"
-          :key="value.id"
+          v-for="(value,index) in allTagsList.life"
+          :key="index"
           :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
           @click="changeSelected(value)"
         >
@@ -47,9 +47,9 @@
       <ul class="item-container">
         <li
           class="tagItem"
-          v-for="value in allTagsList.play"
+          v-for="(value,index) in allTagsList.play"
           :class="{highLight:value.name===selectedTag.name && value.tagType === selectedTag.tagType}"
-          :key="value.id"
+          :key="index"
           @click="changeSelected(value)"
         >
           <span>{{value.name}}</span>

@@ -63,7 +63,7 @@ export default {
   .icon {
     font-size: 5px;
     position: absolute;
-    left: 10px;
+    left: 40px;
     top: 20px;
     width: 22px;
     height: 22px;

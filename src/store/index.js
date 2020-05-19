@@ -72,15 +72,15 @@ export default new Vuex.Store({
             },
             {
                 id: 2,
-                name: "话费",
-                iconName: "telephoneBill",
+                name: "日用",
+                iconName: "dailyExpenses",
                 tagType: "日常"
 
             },
             {
                 id: 3,
                 name: "维护",
-                iconName: "lottery",
+                iconName: "maintain",
                 tagType: "日常"
 
             },
@@ -94,6 +94,18 @@ export default new Vuex.Store({
                 id: 5,
                 name: "交通",
                 iconName: "traffic",
+                tagType: "日常"
+            },
+            {
+                id: 5,
+                name: "工资",
+                iconName: "wages",
+                tagType: "日常"
+            },
+            {
+                id: 6,
+                name: "社交",
+                iconName: "socialContact",
                 tagType: "日常"
             }
         ],
@@ -124,13 +136,14 @@ export default new Vuex.Store({
                 iconName: "lottery",
                 tagType: "娱乐"
             }
-        ]
+        ],
+        
     },
     userSelectedTag:[{
         id:0,
-        tagType:'食物',
-        name:'餐饮',
-        iconName:'food'
+        name: "外卖",
+        iconName: "takeOutFood",
+        tagType: "食物"
     },
     {
         id: 1,
@@ -139,18 +152,31 @@ export default new Vuex.Store({
         tagType: "日常"
     },
     {
-        id:2,
+        id: 2,
+        name: "游戏",
+        iconName: "game",
+        tagType: "娱乐"
+
+    },
+    {
+        id:3,
+         name: "工资",
+        iconName: "wages",
+        tagType: "日常"
+    },
+    {
+        id:4,
         tagType:'add',
         name:'添加',
         iconName:'add'
     }],
     defaultSelectedTag:[
         {
-                id: 0,
-                name: "餐饮",
-                iconName: "food",
-                tagType: "食物"
-            }
+            id: 0,
+            name: "外卖",
+            iconName: "takeOutFood",
+            tagType: "食物"
+        }
     ],
     recordList:[]
   },

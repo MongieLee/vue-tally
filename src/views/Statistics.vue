@@ -174,7 +174,12 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+.el-month-table td.current:not(.disabled) .cell,
+.el-month-table td.today .cell {
+  color: red;
+}
+</style>
 <style lang="scss" scoped>
 ::v-deep .el-month-table td.current:not(.disabled) .cell {
   color: red;
@@ -223,6 +228,9 @@ export default {
         color: #999;
         display: flex;
         justify-content: space-between;
+      }
+      span:nth-child(1){
+        margin-right: 5px;
       }
     }
   }
