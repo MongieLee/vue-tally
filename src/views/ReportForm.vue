@@ -13,8 +13,8 @@
       </ul>
     </div>
     <div>{{getTimeText}}</div>
-    <div>总支出：{{parseFloat(totalAmount).toFixed(2)}}</div>
-    <div>平均支出：{{parseFloat(totalAmount/31).toFixed(2)}}</div>
+    <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
+    <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{parseFloat(totalAmount/31).toFixed(2)}}</div>
     <div id="lineChart"></div>
     <div>
       <div id="pieChart" class="aaa"></div>
@@ -42,7 +42,7 @@ export default {
     changeType(type) {
       this.type = type;
       this.getLineData();
-      this.getPieData();
+      // this.getPieData();
       myChart.createLineChart("lineChart", this.companyDate, this.lineData);
       myChart.createPieChart("pieChart", this.pieData);
     },
@@ -53,7 +53,6 @@ export default {
       let payOrIncomeList = []; //记录最终所有支出or收入金额结果数组
       this.totalAmount = 0;
       let type = this.type;
-      console.log("i run ");
       const nullRecordObj = {
         week: [0, 0, 0, 0, 0, 0, 0],
         month: [
@@ -91,21 +90,47 @@ export default {
         ],
         year: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
+      const nullPieData = [{ value: 0, name: "暂无数据" }];
       let allRecord = JSON.parse(JSON.stringify(this.recordList)); //获取所有账单数据
       if (allRecord.length === 0) {
-        return nullRecordObj[this.companyDate];
+        this.lineData = nullRecordObj[this.companyDate];
+        this.pieData = nullPieData;
+        return;
       }
+      //如果没有账单数据
       let newArr = [];
 
       const handleTypeList = {
-        week() {},
+        week() {
+        },
         month: () => {
-          console.log("i run2 ");
-
           allRecord.map(v => {
             dayJs(v.createTime).month() === dayJs(new Date()).month() &&
               newArr.push(v);
-          }); //筛选出账单类别中所有属于本月的账单
+          }); //筛选出账单类别中所有属于本月的账单newArr
+
+          let tempPieData = {};
+          newArr.map((value) => {
+            console.log(value.type === type);
+            if (value.type === type) {
+              let valueType = value.selectedTag.tagType;
+              if (tempPieData[valueType] === undefined) {
+                tempPieData[valueType] = value.amount;
+              } else {
+                tempPieData[valueType] += value.amount;
+              }
+            }
+          });
+          if (Object.keys(tempPieData).length === 0) {
+            this.pieData = nullPieData;
+          } else {
+            let pieList = [];
+            for (let item in tempPieData) {
+              pieList.push({ value: tempPieData[item], name: item });
+            }
+            this.pieData = pieList;
+            console.log(this.pieData);
+          }
 
           for (let i = 0; i < 31; i++) {
             newArr.map(v => {
@@ -158,7 +183,6 @@ export default {
   },
   mounted() {
     this.getLineData();
-    this.getPieData();
     myChart.createLineChart("lineChart", this.companyDate, this.lineData);
     myChart.createPieChart("pieChart", this.pieData);
   },

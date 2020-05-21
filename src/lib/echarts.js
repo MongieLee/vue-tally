@@ -69,7 +69,7 @@ export default {
     const lineChart = Echarts.init(document.getElementById(dom))
     let option = {
       title: {
-        text: '消费占比',
+        text: '占比程度',
         subtext: '实时更新',
         left: 'center'
       },
