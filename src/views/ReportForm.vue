@@ -41,12 +41,10 @@ export default {
   methods: {
     changeType(type) {
       this.type = type;
-      this.getLineData()
-      myChart.createLineChart(
-        "lineChart",
-        this.companyDate,
-        this.lineData
-      );
+      this.getLineData();
+      this.getPieData();
+      myChart.createLineChart("lineChart", this.companyDate, this.lineData);
+      myChart.createPieChart("pieChart", this.pieData);
     },
     change(string) {
       this.companyDate = string;
@@ -142,27 +140,7 @@ export default {
         },
         year() {}
       };
-      handleTypeList[this.companyDate]()
-    },
-    getPieData() {
-      let allRecord = JSON.parse(JSON.stringify(this.recordList));
-      if (allRecord.length === 0) {
-        this.pieData =  [{ value: 0, name: "暂无数据" }];
-      }
-      let dataObj = {};
-      allRecord.map(v => {
-        let type = v.selectedTag.tagType;
-        if (!dataObj[type]) {
-          dataObj[type] = v.amount;
-        } else {
-          dataObj[type] += parseFloat(v.amount);
-        }
-      });
-      let chartData = [];
-      for (let key in dataObj) {
-        chartData.push({ value: dataObj[key], name: key });
-      }
-      this.pieData =  chartData;
+      handleTypeList[this.companyDate]();
     }
   },
   computed: {
@@ -176,12 +154,11 @@ export default {
     },
     recordList() {
       return this.$store.state.recordList;
-    },
-
-    
+    }
   },
   mounted() {
     this.getLineData();
+    this.getPieData();
     myChart.createLineChart("lineChart", this.companyDate, this.lineData);
     myChart.createPieChart("pieChart", this.pieData);
   },
