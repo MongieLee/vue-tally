@@ -11,48 +11,48 @@ export default new Vuex.Store({
                 id: 0,
                 name: "餐饮",
                 iconName: "food",
-                tagType: "食物"
+                tagType: "吃喝"
             },
             {
                 id: 1,
                 name: "水果",
                 iconName: "fruits",
-                tagType: "食物"
+                tagType: "吃喝"
 
             },
             {
                 id: 2,
                 name: "酒水",
                 iconName: "drinks",
-                tagType: "食物"
+                tagType: "吃喝"
 
             },
             {
                 id: 3,
                 name: "零食",
                 iconName: "snacks",
-                tagType: "食物"
+                tagType: "吃喝"
 
             },
             {
                 id: 4,
                 name: "买菜",
                 iconName: "buyVegetables",
-                tagType: "食物"
+                tagType: "吃喝"
 
             },
             {
                 id: 5,
                 name: "外卖",
                 iconName: "takeOutFood",
-                tagType: "食物"
+                tagType: "吃喝"
 
             },
             {
                 id: 6,
                 name: "奶茶",
                 iconName: "teaWithMilk",
-                tagType: "食物"
+                tagType: "吃喝"
 
             }
         ],

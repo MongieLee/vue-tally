@@ -8,6 +8,10 @@ import Layout from '@/components/Layout.vue'
 import Icon from '@/components/Icon.vue'
 Vue.config.productionTip = false
 import { DatePicker, MessageBox } from "element-ui";
+
+import echarts from "echarts";
+Vue.prototype.$echarts = echarts;
+
 Vue.prototype.$confirm = MessageBox;
 Vue.component(DatePicker.name, DatePicker)
 Vue.component('Nav', Nav)
