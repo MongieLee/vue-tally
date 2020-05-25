@@ -7,18 +7,19 @@
       </div>
 
       <ul class="company-date">
-        <li @click="change('week')" :class="{active:companyDate==='week'}">周</li>
-        <li @click="change('month')" :class="{active:companyDate==='month'}">月</li>
-        <li @click="change('year')" :class="{active:companyDate==='year'}">年</li>
+        <li @click="changeCompanyDate('week')" :class="{active:companyDate==='week'}">周</li>
+        <li @click="changeCompanyDate('month')" :class="{active:companyDate==='month'}">月</li>
+        <li @click="changeCompanyDate('year')" :class="{active:companyDate==='year'}">年</li>
       </ul>
     </div>
-    <div>{{getTimeText}}</div>
-    <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
-    <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{parseFloat(totalAmount/31).toFixed(2)}}</div>
-    <div id="lineChart"></div>
-    <div>
-      <div id="pieChart" class="aaa"></div>
+
+    <div class="class-wrapper">
+      {{getTimeText}}
+      <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
+      <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{parseFloat(totalAmount/31).toFixed(2)}}</div>
     </div>
+    <div id="lineChart"></div>
+    <div id="pieChart" class="aaa"></div>
   </Layout>
 </template>
 
@@ -42,12 +43,15 @@ export default {
     changeType(type) {
       this.type = type;
       this.getLineData();
-      // this.getPieData();
       myChart.createLineChart("lineChart", this.companyDate, this.lineData);
       myChart.createPieChart("pieChart", this.pieData);
     },
-    change(string) {
+    changeCompanyDate(string) {
       this.companyDate = string;
+      this.getLineData();
+      console.log(this.pieData, `and`, this.companyDate);
+      myChart.createLineChart("lineChart", this.companyDate, this.lineData);
+      myChart.createPieChart("pieChart", this.pieData);
     },
     getLineData() {
       let payOrIncomeList = []; //记录最终所有支出or收入金额结果数组
@@ -98,19 +102,106 @@ export default {
         return;
       }
       //如果没有账单数据
-      let newArr = [];
+      let newArr;
 
       const handleTypeList = {
-        week() {
+        week: () => {
+          newArr = [];
+          let o = [];
+          let xxx = dayJs()
+            .startOf("week")
+            .add(1, "day");
+          for (let i = 0; i < 7; i++) {
+            o.push(xxx.add(i, "day").valueOf());
+          }
+          console.log(o);
+          allRecord.map(v => {
+            o.indexOf(
+              dayJs(v.createTime)
+                .hour(0)
+                .minute(0)
+                .second(0)
+                .millisecond(0)
+                .valueOf()
+            ) >= 0 && newArr.push(v);
+          }); //筛选
+          console.log(`本周账单`, newArr);
+          let tempPieData = {};
+          newArr.map(value => {
+            console.log(value.type === type);
+            if (value.type === type) {
+              let valueType = value.selectedTag.tagType;
+              if (tempPieData[valueType] === undefined) {
+                tempPieData[valueType] = value.amount;
+              } else {
+                tempPieData[valueType] += value.amount;
+              }
+            }
+          });
+          console.log(tempPieData);
+          if (Object.keys(tempPieData).length === 0) {
+            this.pieData = nullPieData;
+          } else {
+            let pieList = [];
+            for (let item in tempPieData) {
+              pieList.push({ value: tempPieData[item], name: item });
+            }
+            this.pieData = pieList;
+            console.log(`这是最终的结果`, this.pieData);
+          }
+          //---------------------------------------------
+          console.log(payOrIncomeList);
+          for (let i = 0; i < 7; i++) {
+            newArr.map(v => {
+              //得到本月31天每一天的账单数据
+              if (!payOrIncomeList[i]) {
+                payOrIncomeList[i] = [];
+              }
+              if (dayJs(v.createTime).day() === i) {
+                if (i === 0) {
+                  payOrIncomeList[6].push(v);
+                } else {
+                  payOrIncomeList[i - 1].push(v);
+                }
+              }
+            });
+          }
+          payOrIncomeList.map((v, index) => {
+            //31天每一天的总金额
+            if (v.length === 0) {
+              payOrIncomeList[index] = 0; //没有数据则当天为0
+            } else {
+              let count = 0;
+              v.map(value => {
+                //遍历有数据的那天
+                if (value.type === type) {
+                  count += parseFloat(value.amount);
+                }
+              });
+              payOrIncomeList[index] = count;
+            }
+          });
+          payOrIncomeList.map(value => {
+            this.totalAmount += value;
+          });
+          this.lineData = payOrIncomeList;
         },
         month: () => {
+          let newArr2 = [];
+          newArr = [];
           allRecord.map(v => {
+            dayJs(v.createTime).year() === dayJs(new Date()).year() &&
+              newArr2.push(v);
+          }); //筛选出账单类别中所有属于本年的账单newArr
+          console.log("这是今年的账单", newArr);
+          console.log("这是月");
+          newArr2.map(v => {
             dayJs(v.createTime).month() === dayJs(new Date()).month() &&
               newArr.push(v);
           }); //筛选出账单类别中所有属于本月的账单newArr
 
           let tempPieData = {};
-          newArr.map((value) => {
+          newArr.map(value => {
             console.log(value.type === type);
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
@@ -163,7 +254,72 @@ export default {
           });
           this.lineData = payOrIncomeList;
         },
-        year() {}
+        year: () => {
+          newArr = [];
+          allRecord.map(v => {
+            dayJs(v.createTime).year() === dayJs(new Date()).year() &&
+              newArr.push(v);
+          }); //筛选出账单类别中所有属于本年的账单newArr
+          console.log("这是今年的账单", newArr);
+
+          let tempPieData = {};
+          newArr.map(value => {
+            console.log(value.type === type);
+            if (value.type === type) {
+              let valueType = value.selectedTag.tagType;
+              if (tempPieData[valueType] === undefined) {
+                tempPieData[valueType] = value.amount;
+              } else {
+                tempPieData[valueType] += value.amount;
+              }
+            }
+          });
+          console.log(tempPieData, "tempPieData");
+          if (Object.keys(tempPieData).length === 0) {
+            this.pieData = nullPieData;
+          } else {
+            let pieList = [];
+            for (let item in tempPieData) {
+              pieList.push({ value: tempPieData[item], name: item });
+            }
+            console.log(pieList);
+
+            this.pieData = pieList;
+          }
+
+          //折线图
+          for (let i = 0; i < 12; i++) {
+            newArr.map(v => {
+              //得到本月31天每一天的账单数据
+              if (!payOrIncomeList[i]) {
+                payOrIncomeList[i] = [];
+              }
+              if (dayJs(v.createTime).month() === i) {
+                payOrIncomeList[i].push(v);
+              }
+            });
+          }
+          console.log("payOrIncomeList", payOrIncomeList);
+          payOrIncomeList.map((v, index) => {
+            //31天每一天的总金额
+            if (v.length === 0) {
+              payOrIncomeList[index] = 0; //没有数据则当天为0
+            } else {
+              let count = 0;
+              v.map(value => {
+                //遍历有数据的那天
+                if (value.type === type) {
+                  count += parseFloat(value.amount);
+                }
+              });
+              payOrIncomeList[index] = count;
+            }
+          });
+          payOrIncomeList.map(value => {
+            this.totalAmount += value;
+          });
+          this.lineData = payOrIncomeList;
+        }
       };
       handleTypeList[this.companyDate]();
     }
@@ -189,12 +345,20 @@ export default {
 
   created() {
     this.$store.commit("initRecordList");
+    // console.log(dayJs(new Date().getTime()).day(0).getTIme())
   }
 };
 </script>
 
 <style lang="scss" scoped>
 $base-color: rgb(255, 218, 71);
+.class-wrapper {
+  font-size: 14px;
+  padding: 10px 0 3px 35px;
+  div {
+    color: #999;
+  }
+}
 .top-bar {
   background-color: $base-color;
   padding: 11px 0;
@@ -212,8 +376,7 @@ $base-color: rgb(255, 218, 71);
   }
 }
 #lineChart {
-  width: 100vw;
-  height: 17vh;
+  height: 23vh;
 }
 #pieChart {
   width: 100vw;
