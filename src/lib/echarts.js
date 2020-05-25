@@ -48,6 +48,9 @@ export default {
           animation: false
         }
       },
+      grid: {
+        top: 0,
+    },
       xAxis: {
         type: 'category',
         boundaryGap: false,
