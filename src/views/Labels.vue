@@ -69,7 +69,7 @@ export default {
         id: 0,
         name: "餐饮",
         iconName: "food",
-        tagType: "食物"
+        tagType: "吃喝"
       }
     };
   },
@@ -89,6 +89,7 @@ export default {
       const currentTag = this.selectedTag;
       let tempB = true
       this.$store.state.userSelectedTag.map(v => {
+        console.log(v.name === currentTag.name && v.tagType === currentTag.tagType)
         if (v.name === currentTag.name && v.tagType === currentTag.tagType) {
           alert("不能添加重复的标签！");
           tempB = false

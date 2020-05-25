@@ -2,7 +2,7 @@
   <Layout>
     <div class="data-container">
       <div class="text-title">
-        <span>大象记账</span>
+        <span>轻记账</span>
       </div>
       <div class="time-and-count">
         <el-date-picker class="xxx" v-model="currentM" type="month" placeholder="选择月"></el-date-picker>

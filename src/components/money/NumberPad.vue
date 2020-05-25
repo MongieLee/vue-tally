@@ -10,7 +10,7 @@
       <button @click="inputNumber">1</button>
       <button @click="inputNumber">2</button>
       <button @click="inputNumber">3</button>
-      <button @click="removeOne">X</button>
+      <button @click="removeOne">Del</button>
       <button @click="inputNumber">4</button>
       <button @click="inputNumber">5</button>
       <button @click="inputNumber">6</button>

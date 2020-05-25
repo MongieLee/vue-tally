@@ -35,13 +35,8 @@
 
 <script>
 import dayJs from "dayjs";
-import { MessageBox } from "element-ui";
-import Vue from "vue";
 
 export default {
-  components: {
-    MessageBox
-  },
   data() {
     return {
       recordItem: null
@@ -72,7 +67,6 @@ export default {
         type: "warning"
       })
         .then(() => {
-          const { day, id } = this.$route.params;
           let arr = JSON.parse(localStorage.getItem("recordList"));
 
           arr.map(v => {
@@ -97,9 +91,10 @@ export default {
 .el-message-box {
   width: 300px;
 }
-.el-button--primary {
+.el-button--primary,
+.el-button--primary:hover {
   background-color: red;
-  border:none;
+  border: none;
 }
 </style>
 <style lang="scss" scoped>

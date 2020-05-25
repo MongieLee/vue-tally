@@ -16,7 +16,7 @@
     <div class="class-wrapper">
       {{getTimeText}}
       <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
-      <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{parseFloat(totalAmount/31).toFixed(2)}}</div>
+      <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{pingjunshu}}</div>
     </div>
     <div id="lineChart"></div>
     <div id="pieChart" class="aaa"></div>
@@ -150,7 +150,6 @@ export default {
             console.log(`这是最终的结果`, this.pieData);
           }
           //---------------------------------------------
-          console.log(payOrIncomeList);
           for (let i = 0; i < 7; i++) {
             newArr.map(v => {
               //得到本月31天每一天的账单数据
@@ -166,6 +165,9 @@ export default {
               }
             });
           }
+          console.log(`payOrIncomeList`);
+          console.log(payOrIncomeList);
+
           payOrIncomeList.map((v, index) => {
             //31天每一天的总金额
             if (v.length === 0) {
@@ -335,6 +337,14 @@ export default {
     },
     recordList() {
       return this.$store.state.recordList;
+    },
+    pingjunshu() {
+      if (this.companyDate === "week")
+        return parseFloat(this.totalAmount / 7).toFixed(2);
+      if (this.companyDate === "month")
+        return parseFloat(this.totalAmount / 31).toFixed(2);
+      if (this.companyDate === "year")
+        return parseFloat(this.totalAmount / 12).toFixed(2);
     }
   },
   mounted() {
@@ -380,7 +390,7 @@ $base-color: rgb(255, 218, 71);
 }
 #pieChart {
   width: 100vw;
-  height: 50vh;
+  height: 42vh;
 }
 .company-date {
   display: flex;

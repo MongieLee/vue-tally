@@ -49,7 +49,7 @@ export default {
         }
       },
       grid: {
-        top: 0,
+        top: 5,
     },
       xAxis: {
         type: 'category',
@@ -102,7 +102,6 @@ export default {
         }
       ]
     }
-
     lineChart.setOption(option)
   }
 }

@@ -143,7 +143,7 @@ export default new Vuex.Store({
         id:0,
         name: "外卖",
         iconName: "takeOutFood",
-        tagType: "食物"
+        tagType: "吃喝"
     },
     {
         id: 1,
@@ -175,7 +175,7 @@ export default new Vuex.Store({
             id: 0,
             name: "外卖",
             iconName: "takeOutFood",
-            tagType: "食物"
+            tagType: "吃喝"
         }
     ],
     recordList:[]
