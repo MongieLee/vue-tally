@@ -7,8 +7,8 @@
       <div class="time-and-count">
         <el-date-picker class="xxx" v-model="currentM" type="month" placeholder="选择月"></el-date-picker>
         <div>
-          <span>收入：{{currentIncome}}</span>
-          <span>支出：{{currentPay}}</span>
+          <span>收入：{{currentIncome.toFixed(2)}}</span>
+          <span>支出：{{currentPay.toFixed(2)}}</span>
         </div>
       </div>
 
@@ -166,9 +166,9 @@ export default {
 
       let inCome = 0;
       arr.map(v => {
-        if (v.type === "income") inCome += parseInt(v.amount);
+        if (v.type === "income") inCome += v.amount;
       });
-      return inCome;
+      return inCome.toFixed(2);
     }
   },
   created() {
