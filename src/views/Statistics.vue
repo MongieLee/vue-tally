@@ -218,6 +218,7 @@ export default {
 }
 
 .data-wrapper {
+  height: 70vh;
   flex-grow: 1;
   .jjj {
     display: flex;
@@ -237,12 +238,12 @@ export default {
     }
   }
   .null-content {
+    height: 100%;
     display: flex;
     flex-direction: column;
     color: #999;
     justify-content: center;
     align-items: center;
-    height: 100%;
     .icon {
       width: 80px;
       height: 80px;
