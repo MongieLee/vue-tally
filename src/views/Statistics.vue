@@ -155,9 +155,11 @@ export default {
       console.log(arr);
       let pay = 0;
       arr.map(v => {
-        if (v.type === "pay") pay += parseInt(v.amount);
+        if (v.type === "pay") {
+          pay += v.amount;
+        }
       });
-      return pay;
+      return pay.toFixed(2);
     },
     getDayIncome(arr) {
       if (!arr) return;
@@ -229,7 +231,7 @@ export default {
         display: flex;
         justify-content: space-between;
       }
-      span:nth-child(1){
+      span:nth-child(1) {
         margin-right: 5px;
       }
     }

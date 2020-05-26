@@ -107,10 +107,16 @@ export default {
       if (!this.operator) {
         if (this.output.length === 1) {
           this.output = "0";
+        } else if (
+          (this.output.length === 2) &
+          (this.output.slice(0, 1) === "-")
+        ) {
+          this.output = "0";
         } else {
           this.output = this.output.slice(0, -1);
         }
       } else {
+        console.log(this.newNumber.length);
         if (this.newNumber.length === 1) {
           this.newNumber = "0";
         } else {
@@ -157,15 +163,16 @@ export default {
           .toFixed(2)
           .toString();
       } else if (this.operator === "-") {
-        this.output = (parseFloat(this.output) - parseFloat(this.newNumber))
-          .toFixed(2)
-          .toString();
+        this.output = (
+          parseFloat(this.output).toFixed(2) -
+          parseFloat(this.newNumber).toFixed(2)
+        ).toString();
       }
       this.newNumber = "0";
       this.operator = "";
     },
     submitNumber() {
-      this.$emit("update:value", this.output);
+      this.$emit("update:value", parseFloat(this.output).toFixed(2));
       this.$emit("submit", this.output);
       this.output = "0";
     }

@@ -43,14 +43,24 @@ export default {
     changeType(type) {
       this.type = type;
       this.getLineData();
-      myChart.createLineChart("lineChart", this.companyDate, this.lineData);
+      myChart.createLineChart(
+        "lineChart",
+        this.companyDate,
+        this.lineData,
+        this.type
+      );
       myChart.createPieChart("pieChart", this.pieData);
     },
     changeCompanyDate(string) {
       this.companyDate = string;
       this.getLineData();
       console.log(this.pieData, `and`, this.companyDate);
-      myChart.createLineChart("lineChart", this.companyDate, this.lineData);
+      myChart.createLineChart(
+        "lineChart",
+        this.companyDate,
+        this.lineData,
+        this.type
+      );
       myChart.createPieChart("pieChart", this.pieData);
     },
     getLineData() {
@@ -349,7 +359,7 @@ export default {
   },
   mounted() {
     this.getLineData();
-    myChart.createLineChart("lineChart", this.companyDate, this.lineData);
+    myChart.createLineChart("lineChart", this.companyDate, this.lineData,this.type);
     myChart.createPieChart("pieChart", this.pieData);
   },
 
