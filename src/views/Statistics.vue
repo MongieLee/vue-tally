@@ -22,8 +22,8 @@
             <div v-if="value!==undefined" class="day-info">
               <span>{{getDate(index)}}</span>
               <span>
-                <span>{{getDayPay(value)?`支出：${getDayPay(value)} `:null}}</span>
                 <span>{{getDayIncome(value)?`收入：${getDayIncome(value)}`:null}}</span>
+                <span>{{getDayPay(value)?`支出：${getDayPay(value)} `:null}}</span>
               </span>
             </div>
             <div v-if="value!==undefined">
