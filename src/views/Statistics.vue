@@ -199,7 +199,7 @@ export default {
 }
 
 .el-date-editor.el-input {
-  width: 30vw;
+  width: 120px;
   ::v-deep input {
     background-color: transparent;
     color: #000;
