@@ -7,11 +7,11 @@ import Nav from '@/components/Nav.vue'
 import Layout from '@/components/Layout.vue'
 import Icon from '@/components/Icon.vue'
 Vue.config.productionTip = false
-import { DatePicker, MessageBox } from "element-ui";
+import { DatePicker, MessageBox, Message } from "element-ui";
 
 import echarts from "echarts";
 Vue.prototype.$echarts = echarts;
-
+Vue.prototype.$message = Message;
 Vue.prototype.$confirm = MessageBox;
 Vue.component(DatePicker.name, DatePicker)
 Vue.component('Nav', Nav)
@@ -23,8 +23,8 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-window.onload = function(){
+window.onload = function () {
   setTimeout(() => {
-    window.scrollTo(0,10000)
+    window.scrollTo(0, 10000)
   }, 0);
 }
