@@ -18,16 +18,53 @@
       <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
       <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{pingjunshu}}</div>
     </div>
-    <div id="lineChart"></div>
-    <div id="pieChart" class="aaa"></div>
+    <chart style="height: 23vh;" :options="lineChartOption"></chart>
+    <chart :options="pieChartOption"></chart>
   </Layout>
 </template>
 
 <script>
 import dayJs from "dayjs";
-import myChart from "@/lib/echarts.js";
-
+import chart from "../components/Chart";
+const timeMap = {
+  week: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+  month: [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+  ],
+  year: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+};
 export default {
+  components: { chart },
   name: "ReportForm",
   data() {
     return {
@@ -36,32 +73,32 @@ export default {
       currentList: [],
       totalAmount: 0,
       lineData: [],
-      pieData: [] //[{value:1,name:'qqq'}]
+      pieData: [], //[{value:1,name:'qqq'}],
+      chartOption: {
+        xAxis: {
+          type: "category",
+          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        },
+        yAxis: {
+          type: "value",
+        },
+        series: [
+          {
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: "line",
+          },
+        ],
+      },
     };
   },
   methods: {
     changeType(type) {
       this.type = type;
       this.getLineData();
-      myChart.createLineChart(
-        "lineChart",
-        this.companyDate,
-        this.lineData,
-        this.type
-      );
-      myChart.createPieChart("pieChart", this.pieData);
     },
     changeCompanyDate(string) {
       this.companyDate = string;
       this.getLineData();
-      console.log(this.pieData, `and`, this.companyDate);
-      myChart.createLineChart(
-        "lineChart",
-        this.companyDate,
-        this.lineData,
-        this.type
-      );
-      myChart.createPieChart("pieChart", this.pieData);
     },
     getLineData() {
       let payOrIncomeList = []; //记录最终所有支出or收入金额结果数组
@@ -100,9 +137,9 @@ export default {
           0,
           0,
           0,
-          0
+          0,
         ],
-        year: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        year: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       };
       const nullPieData = [{ value: 0, name: "暂无数据" }];
       let allRecord = JSON.parse(JSON.stringify(this.recordList)); //获取所有账单数据
@@ -118,14 +155,12 @@ export default {
         week: () => {
           newArr = [];
           let o = [];
-          let xxx = dayJs()
-            .startOf("week")
-            .add(1, "day");
+          let xxx = dayJs().startOf("week").add(1, "day");
           for (let i = 0; i < 7; i++) {
             o.push(xxx.add(i, "day").valueOf());
           }
           console.log(o);
-          allRecord.map(v => {
+          allRecord.map((v) => {
             o.indexOf(
               dayJs(v.createTime)
                 .hour(0)
@@ -137,7 +172,7 @@ export default {
           }); //筛选
           console.log(`本周账单`, newArr);
           let tempPieData = {};
-          newArr.map(value => {
+          newArr.map((value) => {
             console.log(value.type === type);
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
@@ -161,7 +196,7 @@ export default {
           }
           //---------------------------------------------
           for (let i = 0; i < 7; i++) {
-            newArr.map(v => {
+            newArr.map((v) => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -184,7 +219,7 @@ export default {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map(value => {
+              v.map((value) => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -193,7 +228,7 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map(value => {
+          payOrIncomeList.map((value) => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
@@ -201,19 +236,19 @@ export default {
         month: () => {
           let newArr2 = [];
           newArr = [];
-          allRecord.map(v => {
+          allRecord.map((v) => {
             dayJs(v.createTime).year() === dayJs(new Date()).year() &&
               newArr2.push(v);
           }); //筛选出账单类别中所有属于本年的账单newArr
           console.log("这是今年的账单", newArr);
           console.log("这是月");
-          newArr2.map(v => {
+          newArr2.map((v) => {
             dayJs(v.createTime).month() === dayJs(new Date()).month() &&
               newArr.push(v);
           }); //筛选出账单类别中所有属于本月的账单newArr
 
           let tempPieData = {};
-          newArr.map(value => {
+          newArr.map((value) => {
             console.log(value.type === type);
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
@@ -236,7 +271,7 @@ export default {
           }
 
           for (let i = 0; i < 31; i++) {
-            newArr.map(v => {
+            newArr.map((v) => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -252,7 +287,7 @@ export default {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map(value => {
+              v.map((value) => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -261,21 +296,21 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map(value => {
+          payOrIncomeList.map((value) => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
         },
         year: () => {
           newArr = [];
-          allRecord.map(v => {
+          allRecord.map((v) => {
             dayJs(v.createTime).year() === dayJs(new Date()).year() &&
               newArr.push(v);
           }); //筛选出账单类别中所有属于本年的账单newArr
           console.log("这是今年的账单", newArr);
 
           let tempPieData = {};
-          newArr.map(value => {
+          newArr.map((value) => {
             console.log(value.type === type);
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
@@ -301,7 +336,7 @@ export default {
 
           //折线图
           for (let i = 0; i < 12; i++) {
-            newArr.map(v => {
+            newArr.map((v) => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -318,7 +353,7 @@ export default {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map(value => {
+              v.map((value) => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -327,21 +362,21 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map(value => {
+          payOrIncomeList.map((value) => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
-        }
+        },
       };
       handleTypeList[this.companyDate]();
-    }
+    },
   },
   computed: {
     getTimeText() {
       let timeMap = {
         week: "本周",
         month: "本月",
-        year: "今年"
+        year: "今年",
       };
       return timeMap[this.companyDate];
     },
@@ -349,24 +384,92 @@ export default {
       return this.$store.state.recordList;
     },
     pingjunshu() {
-      if (this.companyDate === "week")
+      if (this.companyDate === "week") {
         return parseFloat(this.totalAmount / 7).toFixed(2);
-      if (this.companyDate === "month")
+      } else if (this.companyDate === "month") {
         return parseFloat(this.totalAmount / 31).toFixed(2);
-      if (this.companyDate === "year")
+      } else if (this.companyDate === "year") {
         return parseFloat(this.totalAmount / 12).toFixed(2);
-    }
+      } else {
+        return '';
+      }
+    },
+    lineChartOption() {
+      return {
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            animation: false,
+          },
+        },
+        grid: {
+          top: 5,
+        },
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          axisLine: { onZero: true },
+          data: timeMap[this.companyDate],
+        },
+        yAxis: {
+          show: false,
+        },
+        series: [
+          {
+            name: this.type === "pay" ? "支出" : "收入",
+            data: this.lineData,
+            type: "line",
+          },
+        ],
+      };
+    },
+    pieChartOption() {
+      let legendData = [];
+      this.pieData.map((v) => {
+        legendData.push(v.name);
+      });
+      return {
+        title: {
+          text: "占比程度",
+          subtext: "实时更新",
+          left: "center",
+        },
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b} : {c} ({d}%)",
+        },
+        legend: {
+          orient: "vertical",
+          left: "left",
+          data: legendData,
+        },
+        series: [
+          {
+            name: "访问来源",
+            type: "pie",
+            radius: "55%",
+            center: ["50%", "60%"],
+            data: this.pieData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: "rgba(0, 0, 0, 0.5)",
+              },
+            },
+          },
+        ],
+      };
+    },
   },
   mounted() {
     this.getLineData();
-    myChart.createLineChart("lineChart", this.companyDate, this.lineData,this.type);
-    myChart.createPieChart("pieChart", this.pieData);
   },
 
   created() {
     this.$store.commit("initRecordList");
     // console.log(dayJs(new Date().getTime()).day(0).getTIme())
-  }
+  },
 };
 </script>
 
@@ -395,11 +498,7 @@ $base-color: rgb(255, 218, 71);
     }
   }
 }
-#lineChart {
-  height: 23vh;
-}
 #pieChart {
-  width: 100vw;
   height: 42vh;
 }
 .company-date {
