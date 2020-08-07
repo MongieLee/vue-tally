@@ -50,7 +50,7 @@ export default {
   created() {
     this.$store.commit("initRecordList");
     const { day, id } = this.$route.params;
-    this.recordItem = JSON.parse(localStorage.getItem("paihaoxude"))[day][id];
+    this.recordItem = JSON.parse(localStorage.getItem("finalBill"))[day][id];
     this.recordItem.type === "income"
       ? (this.recordItem.type = "收入")
       : (this.recordItem.type = "支出");
@@ -61,23 +61,35 @@ export default {
       this.$router.go(-1);
     },
     deleteItem() {
+      const { day, id } = this.$route.params;
       this.$confirm("此操作将永久删除该账单记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          let arr = JSON.parse(localStorage.getItem("recordList"));
+          let recordList = JSON.parse(localStorage.getItem("recordList"));
+          let finalBill = JSON.parse(localStorage.getItem("finalBill"));
 
-          arr.map(v => {
+          recordList.map(v => {
             if (
               dayJs(v.createTime).valueOf() ===
               dayJs(this.recordItem.createTime).valueOf()
             ) {
-              arr.splice(arr.indexOf(v), 1);
+              recordList.splice(recordList.indexOf(v), 1);
             }
           });
-          localStorage.setItem("recordList", JSON.stringify(arr));
+
+          finalBill[day].map(v => {
+            if (
+              dayJs(v.createTime).valueOf() ===
+              dayJs(this.recordItem.createTime).valueOf()
+            ) {
+              finalBill[day].splice(finalBill[day].indexOf(v), 1);
+            }
+          });
+          localStorage.setItem("recordList", JSON.stringify(recordList));
+          localStorage.setItem("finalBill", JSON.stringify(finalBill));
           this.$router.go(-1);
         })
         .catch(error => {

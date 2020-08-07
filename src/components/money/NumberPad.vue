@@ -116,7 +116,6 @@ export default {
           this.output = this.output.slice(0, -1);
         }
       } else {
-        console.log(this.newNumber.length);
         if (this.newNumber.length === 1) {
           this.newNumber = "0";
         } else {
@@ -172,6 +171,11 @@ export default {
       this.operator = "";
     },
     submitNumber() {
+      const value = parseFloat(this.output).toFixed(2);
+      if (value === "0.00") {
+        this.$message.error("金额不能为0");
+        return;
+      }
       this.$emit("update:value", parseFloat(this.output).toFixed(2));
       this.$emit("submit", this.output);
       this.output = "0";

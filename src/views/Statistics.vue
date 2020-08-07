@@ -2,10 +2,10 @@
   <Layout>
     <div class="data-container">
       <div class="text-title">
-        <span>轻记账</span>
+        <span>轻记账(Vue)</span>
       </div>
       <div class="time-and-count">
-        <el-date-picker class="xxx" v-model="currentM" type="month" placeholder="选择月"></el-date-picker>
+        <el-date-picker v-model="currentAt" type="month" placeholder="选择月"></el-date-picker>
         <div>
           <span>收入：{{currentIncome.toFixed(2)}}</span>
           <span>支出：{{currentPay.toFixed(2)}}</span>
@@ -18,7 +18,7 @@
           <span name="traffic">暂无数据,快去记一笔吧~</span>
         </div>
         <div class="jjj" v-else>
-          <div v-for="(value,index) in paixuhoude" :key="index">
+          <div v-for="(value,index) in finalBill" :key="index">
             <div v-if="value!==undefined" class="day-info">
               <span>{{getDate(index)}}</span>
               <span>
@@ -34,7 +34,7 @@
                 :key="index2"
               >
                 <Icon :name="item.selectedTag.iconName" />
-                <span class="tag-type">{{item.selectedTag.tagType}}</span>
+                <span class="tag-type">{{item.selectedTag.name}}</span>
                 <span class="amount">{{item.type==='pay'?'- '+item.amount:item.amount}}</span>
               </router-link>
             </div>
@@ -48,21 +48,19 @@
 
 <script>
 import dayJs from "dayjs";
-// import "element-ui/lib/theme-chalk/index.css";
-
 export default {
   name: "Statistics",
   data() {
     return {
-      currentM: new Date(),
+      currentAt: new Date(),
       currentIncome: 0,
       currentPay: 0,
-      paixuhoude: null
+      finalBill: null
     };
   },
   computed: {
     getMonth() {
-      return dayJs(this.currentM).get("month");
+      return dayJs(this.currentAt).get("month");
     },
     getDay() {
       let objMap = {
@@ -74,13 +72,16 @@ export default {
         "6": "六",
         "7": "七"
       };
-      return objMap[dayJs(this.currentM).get("day")];
+      return objMap[dayJs(this.currentAt).get("day")];
     },
-
+    getYear() {
+      return dayJs(this.currentAt).year();
+    },
     recordList() {
       return this.$store.state.recordList;
     },
     groupedList() {
+      //
       const { recordList } = this;
       if (recordList.length === 0) {
         return recordList;
@@ -90,63 +91,63 @@ export default {
       let currentMonthList = JSON.parse(JSON.stringify(recordList)).filter(
         item => {
           if (
+            //判断每条账单数据的年份和月份，筛选出当前月份的账单
             dayJs(item.createTime).get("month") ===
-            dayJs(this.currentM).get("month")
+              dayJs(this.currentAt).get("month") &&
+            dayJs(item.createTime).get("year") ===
+              dayJs(this.currentAt).get("year")
           ) {
             return item;
           }
         }
       );
-      let xxx = [];
+      let dayList = [];
       currentMonthList.map(v => {
-        let day = dayJs(v.createTime).get("date");
-        if (!xxx[day]) {
-          xxx[day] = [];
-          xxx[day].push(v);
+        const day = dayJs(v.createTime).get("date")-1; //获取每条数据的日期，然后筛选出每一天的账单
+        if (!dayList[day]) {
+          dayList[day] = [];
+          dayList[day].push(v);
         } else {
-          xxx[day].push(v);
+          dayList[day].push(v);
         }
       });
-      xxx.map(w => {
-        w.sort(
+      console.dir(`dayList`)
+      console.dir(dayList)
+      dayList.map(everyDay => {
+        everyDay.sort(
           (a, b) =>
             dayJs(b.createTime).valueOf() - dayJs(a.createTime).valueOf()
-          //  dayJs(a.createTime).valueOf() - dayJs(b.createTime).valueOf()
+            //根据时间将每一天的账单排序
         );
-        w.map(k => {
-          if (k.type === "pay") {
-            this.currentPay += parseFloat(k.amount);
-          } else if (k.type === "income") {
-            this.currentIncome += parseFloat(k.amount);
+        everyDay.map(record => {
+          if (record.type === "pay") {
+            this.currentPay += parseFloat(record.amount); //计算这个月的总支出
+          } else if (record.type === "income") {
+            this.currentIncome += parseFloat(record.amount); //计算这个月的总收入
           }
         });
       });
-      localStorage.setItem("paihaoxude", JSON.stringify(xxx));
-      this.paixuhoude = xxx;
-      return this.paixuhoude;
+      localStorage.setItem("finalBill", JSON.stringify(dayList));
+      this.finalBill = dayList;
+      return this.finalBill;
     }
   },
   methods: {
     getDate(index) {
       let objMap = {
+        "0": "日",
         "1": "一",
         "2": "二",
         "3": "三",
         "4": "四",
         "5": "五",
-        "6": "六",
-        "7": "七"
+        "6": "六"
       };
-      if (!this.paixuhoude[index]) {
+      if (!this.finalBill[index]) {
         return;
       } else {
-        console.log(this.paixuhoude[index][0].createTime, "---");
-        console.log(
-          "星期几",
-          dayJs(this.paixuhoude[index][0].createTime).get("day")
-        );
         return `${this.getMonth + 1}月${index}号 星期${
-          objMap[dayJs(this.paixuhoude[index][0].createTime).get("day")]
+          objMap[dayJs(this.finalBill[index][0].createTime).get("day")]
         }`;
       }
     },

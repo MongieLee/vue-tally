@@ -16,7 +16,6 @@
     <div class="class-wrapper">
       {{getTimeText}}
       <div>{{type==='pay'?'总支出：':'总收入：'}}{{parseFloat(totalAmount).toFixed(2)}}</div>
-      <div>{{type==='pay'?'平均支出：':'平均收入：'}}{{pingjunshu}}</div>
     </div>
     <chart style="height: 23vh;" :options="lineChartOption"></chart>
     <chart :options="pieChartOption"></chart>
@@ -74,33 +73,18 @@ export default {
       totalAmount: 0,
       lineData: [],
       pieData: [], //[{value:1,name:'qqq'}],
-      chartOption: {
-        xAxis: {
-          type: "category",
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        },
-        yAxis: {
-          type: "value",
-        },
-        series: [
-          {
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: "line",
-          },
-        ],
-      },
     };
   },
   methods: {
     changeType(type) {
       this.type = type;
-      this.getLineData();
+      this.getChartData();
     },
     changeCompanyDate(string) {
       this.companyDate = string;
-      this.getLineData();
+      this.getChartData();
     },
-    getLineData() {
+    getChartData() {
       let payOrIncomeList = []; //记录最终所有支出or收入金额结果数组
       this.totalAmount = 0;
       let type = this.type;
@@ -144,7 +128,7 @@ export default {
       const nullPieData = [{ value: 0, name: "暂无数据" }];
       let allRecord = JSON.parse(JSON.stringify(this.recordList)); //获取所有账单数据
       if (allRecord.length === 0) {
-        this.lineData = nullRecordObj[this.companyDate];
+        this.lineData = [this.companyDate];
         this.pieData = nullPieData;
         return;
       }
@@ -159,7 +143,6 @@ export default {
           for (let i = 0; i < 7; i++) {
             o.push(xxx.add(i, "day").valueOf());
           }
-          console.log(o);
           allRecord.map((v) => {
             o.indexOf(
               dayJs(v.createTime)
@@ -383,18 +366,9 @@ export default {
     recordList() {
       return this.$store.state.recordList;
     },
-    pingjunshu() {
-      if (this.companyDate === "week") {
-        return parseFloat(this.totalAmount / 7).toFixed(2);
-      } else if (this.companyDate === "month") {
-        return parseFloat(this.totalAmount / 31).toFixed(2);
-      } else if (this.companyDate === "year") {
-        return parseFloat(this.totalAmount / 12).toFixed(2);
-      } else {
-        return '';
-      }
-    },
     lineChartOption() {
+      console.log(`this.lineData`)
+      console.log(this.lineData)
       return {
         tooltip: {
           trigger: "axis",
@@ -463,7 +437,7 @@ export default {
     },
   },
   mounted() {
-    this.getLineData();
+    this.getChartData();
   },
 
   created() {

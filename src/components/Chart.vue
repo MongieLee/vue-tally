@@ -16,8 +16,6 @@ export default {
   },
   mounted() {
     this.chartDom = Echarts.init(this.$refs.chartWrapper);
-    console.log(this.chartDom.setOption);
-
     console.log(`this.options`);
     console.log(this.options);
 
