@@ -140,9 +140,10 @@ export default {
           newArr = [];
           let o = [];
           let xxx = dayJs()
-            .startOf("week")
-            .add(1, "day");
-          for (let i = 0; i < 7; i++) {
+            .subtract(1, "day")
+            .startOf("week");
+
+          for (let i = 1; i < 8; i++) {
             o.push(xxx.add(i, "day").valueOf());
           }
           allRecord.map(v => {
@@ -158,7 +159,7 @@ export default {
           if (newArr.length === 0) {
             this.lineData = nullLineData[this.companyDate];
             this.pieData = nullPieData;
-            return
+            return;
           }
           let tempPieData = {};
           newArr.map(value => {
@@ -180,22 +181,16 @@ export default {
             }
             this.pieData = pieList;
           }
+
           //---------------------------------------------
-          for (let i = 0; i < 7; i++) {
-            newArr.map(v => {
-              //得到本月31天每一天的账单数据
-              if (!payOrIncomeList[i]) {
-                payOrIncomeList[i] = [];
-              }
-              if (dayJs(v.createTime).day() === i) {
-                if (i === 0) {
-                  payOrIncomeList[6].push(v);
-                } else {
-                  payOrIncomeList[i - 1].push(v);
-                }
-              }
-            });
-          }
+          payOrIncomeList = [[], [], [], [], [], [], []];
+          newArr.map(v => {
+            if (dayJs(v.createTime).day() === 0) {
+              payOrIncomeList[6].push(v);
+            } else {
+              payOrIncomeList[dayJs(v.createTime).day()-1].push(v);
+            }
+          });
           payOrIncomeList.map((v, index) => {
             //31天每一天的总金额
             if (v.length === 0) {
@@ -230,7 +225,7 @@ export default {
           if (newArr.length === 0) {
             this.lineData = nullLineData[this.companyDate];
             this.pieData = nullPieData;
-            return
+            return;
           }
           let tempPieData = {};
           newArr.map(value => {
