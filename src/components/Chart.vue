@@ -8,24 +8,21 @@ import Echarts from "echarts";
 export default {
   data() {
     return {
-      chartDom: null,
+      chartDom: null
     };
   },
   props: {
-    options: { type: Object, required: true },
+    options: { type: Object, required: true }
   },
   mounted() {
     this.chartDom = Echarts.init(this.$refs.chartWrapper);
-    console.log(`this.options`);
-    console.log(this.options);
-
     this.chartDom.setOption(this.options);
   },
   watch: {
     options(newOptions) {
       this.chartDom.setOption(newOptions);
-    },
-  },
+    }
+  }
 };
 </script>
 

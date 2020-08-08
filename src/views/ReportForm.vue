@@ -58,9 +58,9 @@ const timeMap = {
     "28",
     "29",
     "30",
-    "31",
+    "31"
   ],
-  year: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+  year: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
 };
 export default {
   components: { chart },
@@ -72,7 +72,7 @@ export default {
       currentList: [],
       totalAmount: 0,
       lineData: [],
-      pieData: [], //[{value:1,name:'qqq'}],
+      pieData: [] //[{value:1,name:'qqq'}],
     };
   },
   methods: {
@@ -88,7 +88,7 @@ export default {
       let payOrIncomeList = []; //记录最终所有支出or收入金额结果数组
       this.totalAmount = 0;
       let type = this.type;
-      const nullRecordObj = {
+      const nullLineData = {
         week: [0, 0, 0, 0, 0, 0, 0],
         month: [
           0,
@@ -121,14 +121,14 @@ export default {
           0,
           0,
           0,
-          0,
+          0
         ],
-        year: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        year: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       };
       const nullPieData = [{ value: 0, name: "暂无数据" }];
       let allRecord = JSON.parse(JSON.stringify(this.recordList)); //获取所有账单数据
       if (allRecord.length === 0) {
-        this.lineData = [this.companyDate];
+        this.lineData = nullLineData[this.companyDate];
         this.pieData = nullPieData;
         return;
       }
@@ -139,11 +139,13 @@ export default {
         week: () => {
           newArr = [];
           let o = [];
-          let xxx = dayJs().startOf("week").add(1, "day");
+          let xxx = dayJs()
+            .startOf("week")
+            .add(1, "day");
           for (let i = 0; i < 7; i++) {
             o.push(xxx.add(i, "day").valueOf());
           }
-          allRecord.map((v) => {
+          allRecord.map(v => {
             o.indexOf(
               dayJs(v.createTime)
                 .hour(0)
@@ -153,10 +155,13 @@ export default {
                 .valueOf()
             ) >= 0 && newArr.push(v);
           }); //筛选
-          console.log(`本周账单`, newArr);
+          if (newArr.length === 0) {
+            this.lineData = nullLineData[this.companyDate];
+            this.pieData = nullPieData;
+            return
+          }
           let tempPieData = {};
-          newArr.map((value) => {
-            console.log(value.type === type);
+          newArr.map(value => {
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
               if (tempPieData[valueType] === undefined) {
@@ -166,7 +171,6 @@ export default {
               }
             }
           });
-          console.log(tempPieData);
           if (Object.keys(tempPieData).length === 0) {
             this.pieData = nullPieData;
           } else {
@@ -175,11 +179,10 @@ export default {
               pieList.push({ value: tempPieData[item], name: item });
             }
             this.pieData = pieList;
-            console.log(`这是最终的结果`, this.pieData);
           }
           //---------------------------------------------
           for (let i = 0; i < 7; i++) {
-            newArr.map((v) => {
+            newArr.map(v => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -193,16 +196,13 @@ export default {
               }
             });
           }
-          console.log(`payOrIncomeList`);
-          console.log(payOrIncomeList);
-
           payOrIncomeList.map((v, index) => {
             //31天每一天的总金额
             if (v.length === 0) {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map((value) => {
+              v.map(value => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -211,7 +211,7 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map((value) => {
+          payOrIncomeList.map(value => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
@@ -219,20 +219,21 @@ export default {
         month: () => {
           let newArr2 = [];
           newArr = [];
-          allRecord.map((v) => {
+          allRecord.map(v => {
             dayJs(v.createTime).year() === dayJs(new Date()).year() &&
               newArr2.push(v);
           }); //筛选出账单类别中所有属于本年的账单newArr
-          console.log("这是今年的账单", newArr);
-          console.log("这是月");
-          newArr2.map((v) => {
+          newArr2.map(v => {
             dayJs(v.createTime).month() === dayJs(new Date()).month() &&
               newArr.push(v);
           }); //筛选出账单类别中所有属于本月的账单newArr
-
+          if (newArr.length === 0) {
+            this.lineData = nullLineData[this.companyDate];
+            this.pieData = nullPieData;
+            return
+          }
           let tempPieData = {};
-          newArr.map((value) => {
-            console.log(value.type === type);
+          newArr.map(value => {
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
               if (tempPieData[valueType] === undefined) {
@@ -250,11 +251,10 @@ export default {
               pieList.push({ value: tempPieData[item], name: item });
             }
             this.pieData = pieList;
-            console.log(this.pieData);
           }
 
           for (let i = 0; i < 31; i++) {
-            newArr.map((v) => {
+            newArr.map(v => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -270,7 +270,7 @@ export default {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map((value) => {
+              v.map(value => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -279,22 +279,20 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map((value) => {
+          payOrIncomeList.map(value => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
         },
         year: () => {
           newArr = [];
-          allRecord.map((v) => {
+          allRecord.map(v => {
             dayJs(v.createTime).year() === dayJs(new Date()).year() &&
               newArr.push(v);
           }); //筛选出账单类别中所有属于本年的账单newArr
-          console.log("这是今年的账单", newArr);
 
           let tempPieData = {};
-          newArr.map((value) => {
-            console.log(value.type === type);
+          newArr.map(value => {
             if (value.type === type) {
               let valueType = value.selectedTag.tagType;
               if (tempPieData[valueType] === undefined) {
@@ -304,7 +302,6 @@ export default {
               }
             }
           });
-          console.log(tempPieData, "tempPieData");
           if (Object.keys(tempPieData).length === 0) {
             this.pieData = nullPieData;
           } else {
@@ -312,14 +309,12 @@ export default {
             for (let item in tempPieData) {
               pieList.push({ value: tempPieData[item], name: item });
             }
-            console.log(pieList);
-
             this.pieData = pieList;
           }
 
           //折线图
           for (let i = 0; i < 12; i++) {
-            newArr.map((v) => {
+            newArr.map(v => {
               //得到本月31天每一天的账单数据
               if (!payOrIncomeList[i]) {
                 payOrIncomeList[i] = [];
@@ -329,14 +324,13 @@ export default {
               }
             });
           }
-          console.log("payOrIncomeList", payOrIncomeList);
           payOrIncomeList.map((v, index) => {
             //31天每一天的总金额
             if (v.length === 0) {
               payOrIncomeList[index] = 0; //没有数据则当天为0
             } else {
               let count = 0;
-              v.map((value) => {
+              v.map(value => {
                 //遍历有数据的那天
                 if (value.type === type) {
                   count += parseFloat(value.amount);
@@ -345,21 +339,21 @@ export default {
               payOrIncomeList[index] = count;
             }
           });
-          payOrIncomeList.map((value) => {
+          payOrIncomeList.map(value => {
             this.totalAmount += value;
           });
           this.lineData = payOrIncomeList;
-        },
+        }
       };
       handleTypeList[this.companyDate]();
-    },
+    }
   },
   computed: {
     getTimeText() {
       let timeMap = {
         week: "本周",
         month: "本月",
-        year: "今年",
+        year: "今年"
       };
       return timeMap[this.companyDate];
     },
@@ -367,55 +361,53 @@ export default {
       return this.$store.state.recordList;
     },
     lineChartOption() {
-      console.log(`this.lineData`)
-      console.log(this.lineData)
       return {
         tooltip: {
           trigger: "axis",
           axisPointer: {
-            animation: false,
-          },
+            animation: false
+          }
         },
         grid: {
-          top: 5,
+          top: 5
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
           axisLine: { onZero: true },
-          data: timeMap[this.companyDate],
+          data: timeMap[this.companyDate]
         },
         yAxis: {
-          show: false,
+          show: false
         },
         series: [
           {
             name: this.type === "pay" ? "支出" : "收入",
             data: this.lineData,
-            type: "line",
-          },
-        ],
+            type: "line"
+          }
+        ]
       };
     },
     pieChartOption() {
       let legendData = [];
-      this.pieData.map((v) => {
+      this.pieData.map(v => {
         legendData.push(v.name);
       });
       return {
         title: {
           text: "占比程度",
           subtext: "实时更新",
-          left: "center",
+          left: "center"
         },
         tooltip: {
           trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)",
+          formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
           orient: "vertical",
           left: "left",
-          data: legendData,
+          data: legendData
         },
         series: [
           {
@@ -428,13 +420,13 @@ export default {
               itemStyle: {
                 shadowBlur: 10,
                 shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)",
-              },
-            },
-          },
-        ],
+                shadowColor: "rgba(0, 0, 0, 0.5)"
+              }
+            }
+          }
+        ]
       };
-    },
+    }
   },
   mounted() {
     this.getChartData();
@@ -442,8 +434,7 @@ export default {
 
   created() {
     this.$store.commit("initRecordList");
-    // console.log(dayJs(new Date().getTime()).day(0).getTIme())
-  },
+  }
 };
 </script>
 

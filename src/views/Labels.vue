@@ -87,15 +87,17 @@ export default {
     },
     submitTag() {
       const currentTag = this.selectedTag;
-      let tempB = true
+      let tempB = true;
       this.$store.state.userSelectedTag.map(v => {
-        console.log(v.name === currentTag.name && v.tagType === currentTag.tagType)
         if (v.name === currentTag.name && v.tagType === currentTag.tagType) {
-          alert("不能添加重复的标签！");
-          tempB = false
+          this.$message({
+            message: "不能添加重复标签！",
+            type: `error`,
+            customClass: `changeWidth`,
+          });
+          tempB = false;
         }
       });
-      console.log(tempB)
       if (tempB) {
         this.$store.commit("saveUserSelectedTag", currentTag);
         this.$router.go(-1);
@@ -104,7 +106,11 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+.changeWidth {
+  min-width: 30vw;
+}
+</style>
 <style lang="scss" scoped>
 .tags-wrapper {
   height: 100%;
@@ -116,8 +122,8 @@ export default {
     display: flex;
     padding: 15px 10px;
     justify-content: space-between;
-    .backFont{
-      margin-left:15px;
+    .backFont {
+      margin-left: 15px;
     }
   }
   .selectedTag {
