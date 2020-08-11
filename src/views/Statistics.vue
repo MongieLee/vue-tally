@@ -5,28 +5,33 @@
         <span>轻记账(Vue)</span>
       </div>
       <div class="time-and-count">
-        <el-date-picker :editable='falsy' :clearable='falsy' v-model="currentAt" type="month" placeholder="选择月"></el-date-picker>
+        <el-date-picker
+          :editable="falsy"
+          :clearable="falsy"
+          v-model="currentAt"
+          type="month"
+          placeholder="选择月"
+        ></el-date-picker>
         <div>
           <span>收入：{{currentIncome.toFixed(2)}}</span>
           <span>支出：{{currentPay.toFixed(2)}}</span>
         </div>
       </div>
-
       <div class="data-wrapper">
-        <div class="null-content" v-if="finalBill.length===0">
+        <div class="null-content" v-if="groupedList.length === 0">
           <Icon name="no-data" />
           <span name="traffic">暂无数据,快去记一笔吧~</span>
         </div>
         <div class="dataDetail" v-else>
-          <div v-for="(value,index) in finalBill" :key="index">
-            <div v-if="value!==undefined" class="day-info">
+          <div v-for="(value,index) in groupedList" :key="index">
+            <div v-if="value" class="day-info">
               <span>{{getDate(index)}}</span>
               <span>
                 <span>{{getDayIncome(value)?`收入：${getDayIncome(value)}`:null}}</span>
                 <span>{{getDayPay(value)?`支出：${getDayPay(value)} `:null}}</span>
               </span>
             </div>
-            <div v-if="value!==undefined">
+            <div v-if="value">
               <router-link
                 :to="`/statistics/details/${index}/${index2}`"
                 class="list-item"
@@ -52,67 +57,62 @@ export default {
   name: "Statistics",
   data() {
     return {
-      falsy:false,
+      falsy: false,
       currentAt: new Date(),
       currentIncome: 0,
       currentPay: 0,
-      finalBill: []
+      finalBill: [],
     };
   },
-  watch: {
-    currentAt: {
-      immediate: true,
-      handler() {
-        this.$nextTick(() => {
-          const { recordList } = this;
-          this.currentPay = 0;
-          this.currentIncome = 0;
-          if (!(recordList.length === 0)) {
-            let currentMonthList = JSON.parse(
-              JSON.stringify(recordList)
-            ).filter(item => {
-              if (
-                //判断每条账单数据的年份和月份，筛选出当前月份的账单
-                dayJs(item.createTime).get("month") ===
-                  dayJs(this.currentAt).get("month") &&
-                dayJs(item.createTime).get("year") ===
-                  dayJs(this.currentAt).get("year")
-              ) {
-                return item;
-              }
-            });
-            let dayList = [];
-            currentMonthList.map(v => {
-              const day = dayJs(v.createTime).get("date") - 1; //获取每条数据的日期，然后筛选出每一天的账单
-              if (!dayList[day]) {
-                dayList[day] = [];
-                dayList[day].push(v);
-              } else {
-                dayList[day].push(v);
-              }
-            });
-            dayList.map(everyDay => {
-              everyDay.sort(
-                (a, b) =>
-                  dayJs(b.createTime).valueOf() - dayJs(a.createTime).valueOf()
-                //根据时间将每一天的账单排序
-              );
-              everyDay.map(record => {
-                if (record.type === "pay") {
-                  this.currentPay += parseFloat(record.amount); //计算这个月的总支出
-                } else if (record.type === "income") {
-                  this.currentIncome += parseFloat(record.amount); //计算这个月的总收入
-                }
-              });
-            });
-            localStorage.setItem("finalBill", JSON.stringify(dayList));
-            this.finalBill = dayList;
+  computed: {
+    groupedList() {
+      const { recordList } = this;
+      if (recordList.length === 0) {
+        return recordList;
+      }
+      this.currentPay = 0;
+      this.currentIncome = 0;
+      let currentMonthList = JSON.parse(JSON.stringify(recordList)).filter(
+        (item) => {
+          if (
+            //判断每条账单数据的年份和月份，筛选出当前月份的账单
+            dayJs(item.createTime).get("month") ===
+              dayJs(this.currentAt).get("month") &&
+            dayJs(item.createTime).get("year") ===
+              dayJs(this.currentAt).get("year")
+          ) {
+            return item;
+          }
+        }
+      );
+      let dayList = [];
+      currentMonthList.map((v) => {
+        const day = dayJs(v.createTime).get("date") - 1; //获取每条数据的日期，然后筛选出每一天的账单
+        if (!dayList[day]) {
+          dayList[day] = [];
+          dayList[day].push(v);
+        } else {
+          dayList[day].push(v);
+        }
+      });
+      dayList.map((everyDay) => {
+        everyDay.sort(
+          (a, b) =>
+            dayJs(b.createTime).valueOf() - dayJs(a.createTime).valueOf()
+          //根据时间将每一天的账单排序
+        );
+        everyDay.map((record) => {
+          if (record.type === "pay") {
+            this.currentPay += parseFloat(record.amount); //计算这个月的总支出
+          } else if (record.type === "income") {
+            this.currentIncome += parseFloat(record.amount); //计算这个月的总收入
           }
         });
-      }
-    }
-  },
-  computed: {
+      });
+      localStorage.setItem("finalBill", JSON.stringify(dayList));
+      this.finalBill = dayList;
+      return this.finalBill;
+    },
     getMonth() {
       return dayJs(this.currentAt).get("month");
     },
@@ -124,7 +124,7 @@ export default {
         "4": "四",
         "5": "五",
         "6": "六",
-        "7": "七"
+        "7": "七",
       };
       return objMap[dayJs(this.currentAt).get("day")];
     },
@@ -133,7 +133,7 @@ export default {
     },
     recordList() {
       return this.$store.state.recordList;
-    }
+    },
   },
   methods: {
     getDate(index) {
@@ -144,12 +144,12 @@ export default {
         "3": "三",
         "4": "四",
         "5": "五",
-        "6": "六"
+        "6": "六",
       };
       if (!this.finalBill[index]) {
         return;
       } else {
-        return `${this.getMonth + 1}月${index+1}号 星期${
+        return `${this.getMonth + 1}月${index + 1}号 星期${
           objMap[dayJs(this.finalBill[index][0].createTime).get("day")]
         }`;
       }
@@ -157,7 +157,7 @@ export default {
     getDayPay(arr) {
       if (!arr) return;
       let pay = 0;
-      arr.map(v => {
+      arr.map((v) => {
         if (v.type === "pay") {
           pay += v.amount;
         }
@@ -168,15 +168,15 @@ export default {
       if (!arr) return;
 
       let inCome = 0;
-      arr.map(v => {
+      arr.map((v) => {
         if (v.type === "income") inCome += v.amount;
       });
       return inCome.toFixed(2);
-    }
+    },
   },
   created() {
     this.$store.commit("initRecordList");
-  }
+  },
 };
 </script>
 <style lang="scss">
@@ -186,7 +186,6 @@ export default {
 }
 </style>
 <style lang="scss" scoped>
-
 ::v-deep .el-month-table td.current:not(.disabled) .cell {
   color: red;
 }
