@@ -1,29 +1,9 @@
-# morney
+# 轻记账
+轻记账的UI参考了“鲨鱼记账”App制作的移动端极简记账应用，记账后可通过统计报表查看平时的消费习惯。  
+该项目分别使用Vue及React两种主流框架实现效果。
 
-## Project setup
-```
-yarn install
-```
+Vue版的技术栈使用了Vue 2 / Vue Router / Vuex / LocalStorage / Echarts / ES6 / Element-Ui。  
+[Vue版预览地址](https://mongielee.gitee.io/vue-lightbooking-website/#/statistics)
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Run your unit tests
-```
-yarn test:unit
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+React版的技术栈使用了React / React Router/ Hooks / LocalStorage / Echarts / ES6 / AntDesign。  
+[React版仓库跳转](https://github.com/MongieLee/react-tally)  [React版预览地址](https://mongielee.gitee.io/react-lightbooking-website/#/statistics)
